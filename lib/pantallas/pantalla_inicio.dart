@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pumiagenda/custom_widgets.dart';
 
-class Inicio extends StatelessWidget {
-  const Inicio({super.key});
+class PantallaInicio extends StatelessWidget {
+  const PantallaInicio({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class Inicio extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BarraInferior(),
+      bottomNavigationBar: const BarraInferior(currentIndex: 0,),
     );
   }
 }
