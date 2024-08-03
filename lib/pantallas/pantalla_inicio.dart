@@ -8,7 +8,6 @@ class Inicio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber[300],
         title: const Text(
           "Inicio",
         ),
