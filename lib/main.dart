@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
 import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pumiagenda/pantallas/pantalla_registro.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
+
 GoRouter router = GoRouter(
+  initialLocation: '/Registro',
   routes: [
+    GoRoute(
+      path: '/Registro',
+      builder: (context, state) => const PantallaRegistro(), 
+      ),
     GoRoute(
       path: '/',
       builder: (context, state) => const PantallaInicio(),
