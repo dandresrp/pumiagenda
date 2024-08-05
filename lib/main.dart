@@ -10,16 +10,17 @@ void main() {
 
 
 GoRouter router = GoRouter(
-  initialLocation: '/Registro',
+  
   routes: [
-    GoRoute(
-      path: '/Registro',
-      builder: (context, state) => const PantallaRegistro(), 
-      ),
+    
     GoRoute(
       path: '/',
       builder: (context, state) => const PantallaInicio(),
     ),
+    GoRoute(
+      path: '/Registro',
+      builder: (context, state) => const PantallaRegistro(), 
+      ),
     GoRoute(
       path: '/horasvoae',
       builder: (context, state) => const PantallaHorasVoae(),
