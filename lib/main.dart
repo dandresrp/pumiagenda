@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pumiagenda/pantallas/pantalla_edit_perfil.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
 import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
 import 'package:go_router/go_router.dart';
@@ -22,9 +23,14 @@ GoRouter router = GoRouter(
       builder: (context, state) => const PantallaRegistro(), 
       ),
     GoRoute(
+      path: '/editPerfil',
+      builder: (context, state) => const PantallaEditarPerfil(),
+    ),
+    GoRoute(
       path: '/horasvoae',
       builder: (context, state) => const PantallaHorasVoae(),
     ),
+    
     // GoRoute(
     //   path: '/configuracion',
     //   builder: (context, state) => const PantallaConfiguracion(),

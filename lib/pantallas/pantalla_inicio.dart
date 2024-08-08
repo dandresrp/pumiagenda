@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pumiagenda/custom_widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
@@ -64,7 +65,9 @@ class PantallaInicio extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () {}
+                      onPressed: () {
+                        context.push('/editPerfil');
+                      },
                     ),
                   ],
                 ),
