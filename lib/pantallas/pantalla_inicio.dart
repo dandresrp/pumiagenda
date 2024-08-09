@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:pumiagenda/custom_widgets.dart';
 import 'package:go_router/go_router.dart';
-
-class PantallaInicio extends StatelessWidget {
+import 'package:pumiagenda/custom_widgets.dart';
+class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _PantallaInicioState createState() => _PantallaInicioState();
+}
+
+class _PantallaInicioState extends State<PantallaInicio> {
+  String nombre = 'Diego Andres Rios Pineda';
+  String correo = 'driosp@unah.hn';
+  String cuenta = '20212030281';
+  String carrera = 'Ingenieria en Sistemas';
 
   @override
   Widget build(BuildContext context) {
@@ -30,33 +40,33 @@ class PantallaInicio extends StatelessWidget {
                       child: Icon(Icons.code),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Diego Andres Rios Pineda',
-                            style: TextStyle(
+                            nombre,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            'Ingenieria en Sistemas',
-                            style: TextStyle(
+                            carrera,
+                            style: const TextStyle(
                               fontSize: 16
                             ),
                           ),
                           Text(
-                            'driosp@unah.hn',
-                            style: TextStyle(
+                            correo,
+                            style: const TextStyle(
                               fontSize: 16
                             ),
                           ),
                           Text(
-                            '20212030281',
-                            style: TextStyle(
+                            cuenta,
+                            style: const TextStyle(
                               fontSize: 16
                             ),
                           ),
@@ -64,10 +74,18 @@ class PantallaInicio extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        context.push('/editPerfil');
-                      },
+                    icon: const Icon(Icons.edit),
+                        onPressed: () async {
+                          final resultado = await context.push<Map<String, String>>('/editarPerfil');
+                          if (resultado != null) {
+                            setState(() {
+                              nombre = resultado['nombre']!;
+                              correo = resultado['correo']!;
+                              cuenta = resultado['cuenta']!;
+                              carrera = resultado['carrera']!;
+                            });
+                          }
+                        }
                     ),
                   ],
                 ),

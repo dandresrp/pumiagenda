@@ -23,13 +23,15 @@ GoRouter router = GoRouter(
       builder: (context, state) => const PantallaRegistro(), 
       ),
     GoRoute(
-      path: '/editPerfil',
-      builder: (context, state) => const PantallaEditarPerfil(),
+      path: 
+      '/editarPerfil',
+      builder:  (context, state) => const PantallaEditarPerfil(),
     ),
     GoRoute(
       path: '/horasvoae',
       builder: (context, state) => const PantallaHorasVoae(),
     ),
+   
     
     // GoRoute(
     //   path: '/configuracion',
