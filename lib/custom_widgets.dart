@@ -139,3 +139,67 @@ class CardHorasVoae extends StatelessWidget {
   }
 }
 
+
+//card Roberto
+class ActividadCard extends StatelessWidget {
+  final String nombre;
+  final String fecha;
+
+  const ActividadCard({super.key, required this.nombre, required this.fecha});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+         
+      }, 
+      child: Card(
+        elevation: 2.0,
+        child:
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    nombre,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0), 
+                      minimumSize: const Size(0, 0), 
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                    ),
+                    onPressed: () {
+      
+                    }, 
+                    child: const Text(
+                      'Detalles',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Text(
+                fecha,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
