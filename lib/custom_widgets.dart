@@ -21,10 +21,10 @@ class _BarraInferiorState extends State<BarraInferior> {
   void _navigateToPage(int index) {
     switch (index) {
       case 0:
-        GoRouter.of(context).go('/');
+        context.push('/');
         break;
       case 1:
-        GoRouter.of(context).go('/horasvoae');
+        context.push('/horasvoae');
         break;
       // case 2:
       //   GoRouter.of(context).go('/configuracion');
@@ -101,8 +101,7 @@ class CardHorasVoae extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
+    return ElevatedButton(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 40.0),
         child: Row(
@@ -122,6 +121,20 @@ class CardHorasVoae extends StatelessWidget {
           ],
         ),
       ),
+      onPressed: () => {
+        if(ambito == 'Científico/Academico') {
+          context.push('/ambitoacademico')
+        }
+        else if (ambito == 'Social') {
+          context.push('/ambitosocial')
+        }
+        else if (ambito == 'Deportivo') {
+          context.push('/ambitodeportivo')
+        }
+        else if (ambito == 'Cultural') {
+          context.push('/ambitocultural')
+        }
+      }
     );
   }
 }
