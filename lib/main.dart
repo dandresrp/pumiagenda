@@ -5,6 +5,7 @@ import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
 import 'package:pumiagenda/pantallas/pantalla_ambito_cientifico_academico.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pumiagenda/pantallas/pantalla_registro.dart';
+import 'package:pumiagenda/pantallas/pantalla_configuracion.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,10 +48,10 @@ GoRouter router = GoRouter(
       path: '/ambitocultural',
       builder: (context, state) => const PantallaAmbitoCientificoAcademico(),
     ),    
-    // GoRoute(
-    //   path: '/configuracion',
-    //   builder: (context, state) => const PantallaConfiguracion(),
-    // )
+    GoRoute(
+      path: '/configuracion',
+      builder: (context, state) => const PantallaConfiguracion(),
+    )
   ]
 );
 
