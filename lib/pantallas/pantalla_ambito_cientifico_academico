@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+
+class PantallaAmbitoSocial extends StatelessWidget {
+  const PantallaAmbitoSocial({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ambito Social'),
+        centerTitle: true,
+      ),
+      body: const SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 100.0),
+          child: Center(
+            child: Column(
+              children: [
+                Card(
+                  child: Column(
+                    children: [
+                      Text('Hola soy ua hora VOAE'),
+                      TextButton(onPressed: null, child: Text('Ver mas')),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),  
+        ),
+      ),
+      bottomNavigationBar: const BarraInferior(currentIndex: 2,),
+    );
+  }
+}
+
