@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pumiagenda/custom_widgets.dart';
 
-class PantallaAmbitoSocial extends StatelessWidget {
-  const PantallaAmbitoSocial({super.key});
+class PantallaAmbitoCientificoAcademico extends StatelessWidget {
+  const PantallaAmbitoCientificoAcademico({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ambito Social'),
+        title: const Text('Ámbito Científico/Académico'),
         centerTitle: true,
       ),
       body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 100.0),
+          padding: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 100.0),
           child: Center(
             child: Column(
               children: [
@@ -29,7 +31,6 @@ class PantallaAmbitoSocial extends StatelessWidget {
           ),  
         ),
       ),
-      bottomNavigationBar: const BarraInferior(currentIndex: 2,),
     );
   }
 }

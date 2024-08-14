@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pumiagenda/pantallas/pantalla_edit_perfil.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
 import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
+import 'package:pumiagenda/pantallas/pantalla_ambito_cientifico_academico.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pumiagenda/pantallas/pantalla_registro.dart';
 
@@ -9,11 +10,9 @@ void main() {
   runApp(const MyApp());
 }
 
-
 GoRouter router = GoRouter(
-  
+  // initialLocation: '/ambitoacademico',
   routes: [
-    
     GoRoute(
       path: '/',
       builder: (context, state) => const PantallaInicio(),
@@ -31,8 +30,22 @@ GoRouter router = GoRouter(
       path: '/horasvoae',
       builder: (context, state) => const PantallaHorasVoae(),
     ),
-   
-    
+    GoRoute(
+      path: '/ambitoacademico',
+      builder: (context, state) => const PantallaAmbitoCientificoAcademico(),
+    ),
+    GoRoute(
+      path: '/ambitosocial',
+      builder: (context, state) => const PantallaAmbitoCientificoAcademico(),
+    ),
+    GoRoute(
+      path: '/ambitodeportivo',
+      builder: (context, state) => const PantallaAmbitoCientificoAcademico(),
+    ),
+    GoRoute(
+      path: '/ambitocultural',
+      builder: (context, state) => const PantallaAmbitoCientificoAcademico(),
+    ),    
     // GoRoute(
     //   path: '/configuracion',
     //   builder: (context, state) => const PantallaConfiguracion(),
