@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pumiagenda/custom_widgets.dart';
 
 class PantallaAmbitoCientificoAcademico extends StatelessWidget {
@@ -10,26 +9,16 @@ class PantallaAmbitoCientificoAcademico extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ámbito Científico/Académico'),
+
         centerTitle: true,
       ),
-      body: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(40.0, 100.0, 40.0, 100.0),
-          child: Center(
-            child: Column(
-              children: [
-                Card(
-                  child: Column(
-                    children: [
-                      Text('Hola soy ua hora VOAE'),
-                      TextButton(onPressed: null, child: Text('Ver mas')),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),  
-        ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: const [
+          ActividadCard(nombre: 'Actividad XYZ', fecha: '00/00/00'),
+          SizedBox(height: 16.0),
+          ActividadCard(nombre: 'Solo aceptar Strings de 26', fecha: '11/11/11'),
+        ],
       ),
     );
   }
