@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
 
 class PantallaEditarPerfil extends StatefulWidget {
-  const PantallaEditarPerfil({super.key});
+  final dynamic extrasData;
+
+  const PantallaEditarPerfil({super.key, required this.extrasData});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -69,20 +71,27 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
     return null;
   }
 
+  // TODO: Guardar nuevos datos
   void _guardarDatos() {
     if (_formKey.currentState!.validate()) {
-      // Aquí se debería guardar la información y navegar de vuelta a la pantalla de inicio
-      Navigator.pop(context, {
-        'nombre': _nombreController.text,
-        'correo': _correoController.text,
-        'cuenta': _cuentaController.text,
-        'carrera': _carreraController.text,
-      });
+      context.pushReplacement(
+        '/',
+         extra: {
+          'nombre': _nombreController.text,
+          'correo': _correoController.text,
+          'cuenta': _cuentaController.text,
+          'carrera': _carreraController.text,
+        }
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _nombreController.text = widget.extrasData['nombre'];
+    _correoController.text = widget.extrasData['correo'];
+    _carreraController.text = widget.extrasData['carrera'];
+    _cuentaController.text = widget.extrasData['cuenta'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Perfil'),
@@ -109,6 +118,7 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
               const SizedBox(height: 16),
               _buildEditableField(
                 label: 'Nombre',
+                
                 controller: _nombreController,
                 validator: _validateNombre,
               ),
@@ -120,7 +130,7 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
               ),
               const SizedBox(height: 16),
               _buildEditableField(
-                label: 'N. Cuenta',
+                label: 'Cuenta',
                 controller: _cuentaController,
                 validator: _validateCuenta,
               ),
@@ -158,13 +168,7 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
             ),
             validator: validator,
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            // Acción de editar
-          },
-        ),
+        )
       ],
     );
   }

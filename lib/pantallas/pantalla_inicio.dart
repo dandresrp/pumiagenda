@@ -10,10 +10,12 @@ class PantallaInicio extends StatefulWidget {
 }
 
 class _PantallaInicioState extends State<PantallaInicio> {
-  String nombre = 'Diego Andres Rios Pineda';
-  String correo = 'driosp@unah.hn';
-  String cuenta = '20212030281';
-  String carrera = 'Ingenieria en Sistemas';
+  var datos = {
+    'nombre': 'Diego Andres Rios Pineda',
+    'correo': 'driosp@unah.hn',
+    'cuenta': '20212030281',
+    'carrera': 'Ingenieria en Sistemas',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            nombre,
+                            datos['nombre']!,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -53,19 +55,19 @@ class _PantallaInicioState extends State<PantallaInicio> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            carrera,
+                            datos['carrera']!,
                             style: const TextStyle(
                               fontSize: 16
                             ),
                           ),
                           Text(
-                            correo,
+                            datos['correo']!,
                             style: const TextStyle(
                               fontSize: 16
                             ),
                           ),
                           Text(
-                            cuenta,
+                            datos['cuenta']!,
                             style: const TextStyle(
                               fontSize: 16
                             ),
@@ -75,17 +77,12 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                     IconButton(
                     icon: const Icon(Icons.edit),
-                        onPressed: () async {
-                          final resultado = await context.push<Map<String, String>>('/editarPerfil');
-                          if (resultado != null) {
-                            setState(() {
-                              nombre = resultado['nombre']!;
-                              correo = resultado['correo']!;
-                              cuenta = resultado['cuenta']!;
-                              carrera = resultado['carrera']!;
-                            });
-                          }
-                        }
+                      onPressed: () {
+                        context.push(
+                          '/editarPerfil',
+                          extra: datos,
+                        );
+                      }
                     ),
                   ],
                 ),

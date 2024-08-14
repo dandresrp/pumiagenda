@@ -11,7 +11,6 @@ void main() {
 }
 
 GoRouter router = GoRouter(
-  // initialLocation: '/ambitoacademico',
   routes: [
     GoRoute(
       path: '/',
@@ -22,9 +21,11 @@ GoRouter router = GoRouter(
       builder: (context, state) => const PantallaRegistro(), 
       ),
     GoRoute(
-      path: 
-      '/editarPerfil',
-      builder:  (context, state) => const PantallaEditarPerfil(),
+      path: '/editarPerfil',
+      builder:  (context, state) {
+        final extrasData = state.extra as dynamic;
+        return PantallaEditarPerfil(extrasData: extrasData);
+      } 
     ),
     GoRoute(
       path: '/horasvoae',
