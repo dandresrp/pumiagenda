@@ -76,7 +76,7 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
     if (_formKey.currentState!.validate()) {
       context.pushReplacement(
         '/',
-         extra: {
+          extra: {
           'nombre': _nombreController.text,
           'correo': _correoController.text,
           'cuenta': _cuentaController.text,

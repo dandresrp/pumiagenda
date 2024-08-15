@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pumiagenda/custom_widgets.dart';
 
-class PantallaAmbitoCientificoAcademico extends StatelessWidget {
-  const PantallaAmbitoCientificoAcademico({super.key});
+class PantallaAmbito extends StatefulWidget {
+  final String extrasData;
+  const PantallaAmbito({super.key, required this.extrasData});
 
   @override
+  State<PantallaAmbito> createState() => _PantallaAmbitoState();
+}
+
+class _PantallaAmbitoState extends State<PantallaAmbito> {
+  @override
   Widget build(BuildContext context) {
+    String ambito = widget.extrasData;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Científico/Académico'),
-
+        title: Text(ambito),
         centerTitle: true,
       ),
       body: ListView(

@@ -121,24 +121,10 @@ class CardHorasVoae extends StatelessWidget {
           ],
         ),
       ),
-      onPressed: () => {
-        if(ambito == 'Científico/Academico') {
-          context.push('/ambitoacademico')
-        }
-        else if (ambito == 'Social') {
-          context.push('/ambitosocial')
-        }
-        else if (ambito == 'Deportivo') {
-          context.push('/ambitodeportivo')
-        }
-        else if (ambito == 'Cultural') {
-          context.push('/ambitocultural')
-        }
-      }
+      onPressed: () => context.push('/ambito', extra: ambito)
     );
   }
 }
-
 
 //card Roberto
 class ActividadCard extends StatelessWidget {
@@ -150,9 +136,7 @@ class ActividadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-         
-      }, 
+      onTap: () {}, 
       child: Card(
         elevation: 2.0,
         child:
@@ -177,9 +161,7 @@ class ActividadCard extends StatelessWidget {
                       minimumSize: const Size(0, 0), 
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap
                     ),
-                    onPressed: () {
-      
-                    }, 
+                    onPressed: () {}, 
                     child: const Text(
                       'Detalles',
                       style: TextStyle(

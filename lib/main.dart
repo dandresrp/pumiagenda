@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:pumiagenda/pantallas/pantalla_ambito_cultural.dart';
-import 'package:pumiagenda/pantallas/pantalla_ambito_deportivo.dart';
-import 'package:pumiagenda/pantallas/pantalla_ambito_social.dart';
-import 'package:pumiagenda/pantallas/pantalla_edit_perfil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
 import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
-import 'package:pumiagenda/pantallas/pantalla_ambito_cientifico_academico.dart';
-import 'package:go_router/go_router.dart';
+import 'package:pumiagenda/pantallas/pantalla_edit_perfil.dart';
+import 'package:pumiagenda/pantallas/pantalla_ambito.dart';
 import 'package:pumiagenda/pantallas/pantalla_registro.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
-
 
 GoRouter router = GoRouter(
   routes: [
@@ -37,21 +32,12 @@ GoRouter router = GoRouter(
       builder: (context, state) => const PantallaHorasVoae(),
     ),
     GoRoute(
-      path: '/ambitoacademico',
-      builder: (context, state) => const PantallaAmbitoCientificoAcademico(),
-    ),
-    GoRoute(
-      path: '/ambitosocial',
-      builder: (context, state) => const PantallaAmbitoSocial(),
-    ),
-    GoRoute(
-      path: '/ambitodeportivo',
-      builder: (context, state) => const PantallaAmbitoDeportivo(),
-    ),
-    GoRoute(
-      path: '/ambitocultural',
-      builder: (context, state) => const PantallaAmbitoCultural(),
-    ),    
+      path: '/ambito',
+      builder: (context, state) {
+        final extrasData = state.extra as String;
+        return PantallaAmbito(extrasData: extrasData);
+      },
+    ),   
     // GoRoute(
     //   path: '/configuracion',
     //   builder: (context, state) => const PantallaConfiguracion(),
