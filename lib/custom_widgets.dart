@@ -161,7 +161,7 @@ class ActividadCard extends StatelessWidget {
                       minimumSize: const Size(0, 0), 
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap
                     ),
-                    onPressed: () {}, 
+                    onPressed: () => context.push('/ambito', extra: nombre),
                     child: const Text(
                       'Detalles',
                       style: TextStyle(
