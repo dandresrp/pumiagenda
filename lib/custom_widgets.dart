@@ -101,27 +101,30 @@ class CardHorasVoae extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 40.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Ambito $ambito',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+    return InkWell(
+      borderRadius: BorderRadius.circular(15.0),
+      onTap: () => context.push('/ambito', extra: ambito),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 40.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Ambito $ambito',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            CircleAvatar(
-              radius: 30.0,
-              child: icon,
-            )
-          ],
+              CircleAvatar(
+                radius: 30.0,
+                child: icon,
+              )
+            ],
+          ),
         ),
       ),
-      onPressed: () => context.push('/ambito', extra: ambito)
     );
   }
 }
@@ -136,7 +139,8 @@ class ActividadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {}, 
+      borderRadius: BorderRadius.circular(15.0),
+      onTap: () => context.push('/detalles', extra: nombre), 
       child: Card(
         elevation: 2.0,
         child:
@@ -161,7 +165,7 @@ class ActividadCard extends StatelessWidget {
                       minimumSize: const Size(0, 0), 
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap
                     ),
-                    onPressed: () => context.push('/ambito', extra: nombre),
+                    onPressed: () => context.push('/detalles', extra: nombre),
                     child: const Text(
                       'Detalles',
                       style: TextStyle(
