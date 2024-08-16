@@ -26,9 +26,9 @@ class _BarraInferiorState extends State<BarraInferior> {
       case 1:
         context.push('/horasvoae');
         break;
-      // case 2:
-      //   GoRouter.of(context).go('/configuracion');
-      //   break;
+      case 2:
+        GoRouter.of(context).go('/configuracion');
+        break;
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
 import 'package:pumiagenda/pantallas/pantalla_edit_perfil.dart';
 import 'package:pumiagenda/pantallas/pantalla_ambito.dart';
 import 'package:pumiagenda/pantallas/pantalla_registro.dart';
+import 'package:pumiagenda/pantallas/pantalla_configuracion.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,10 +47,10 @@ GoRouter router = GoRouter(
         return PantallaDetalles(extrasData: extrasData);
       },
     ),   
-    // GoRoute(
-    //   path: '/configuracion',
-    //   builder: (context, state) => const PantallaConfiguracion(),
-    // )
+    GoRoute(
+      path: '/configuracion',
+      builder: (context, state) => const PantallaConfiguracion(),
+    )
   ]
 );
 
