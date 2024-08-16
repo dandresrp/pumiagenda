@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
 import 'package:pumiagenda/pantallas/pantalla_detalles.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
 import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
@@ -15,6 +16,10 @@ GoRouter router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
+      builder: (context, state) => const PantallaNavegacion(),
+    ),
+    GoRoute(
+      path: '/inicio',
       builder: (context, state) => const PantallaInicio(),
     ),
     GoRoute(

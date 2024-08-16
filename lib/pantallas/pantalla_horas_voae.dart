@@ -54,8 +54,7 @@ class PantallaHorasVoae extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: const BarraInferior(currentIndex: 1,),
+      )
     );
   }
 }
