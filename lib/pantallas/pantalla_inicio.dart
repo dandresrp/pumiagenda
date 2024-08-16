@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pumiagenda/custom_widgets.dart';
+import 'package:pumiagenda/models/perfil.dart';
+import 'package:pumiagenda/services/database_service.dart';
 // import 'package:pumiagenda/services/database_service.dart';
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
@@ -11,15 +13,7 @@ class PantallaInicio extends StatefulWidget {
 }
 
 class _PantallaInicioState extends State<PantallaInicio> {
-  // final DatabaseService _databaseService = DatabaseService();
-
-  var datos = {
-    'nombre': 'Diego Andres Rios Pineda',
-    'correo': 'driosp@unah.hn',
-    'cuenta': '20212030281',
-    'carrera': 'Ingenieria en Sistemas',
-  };
-
+  final DatabaseService _databaseService = DatabaseService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,36 +40,46 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            datos['nombre']!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            datos['carrera']!,
-                            style: const TextStyle(
-                              fontSize: 16
-                            ),
-                          ),
-                          Text(
-                            datos['correo']!,
-                            style: const TextStyle(
-                              fontSize: 16
-                            ),
-                          ),
-                          Text(
-                            datos['cuenta']!,
-                            style: const TextStyle(
-                              fontSize: 16
-                            ),
-                          ),
-                        ],
+                      child: FutureBuilder(
+                        future: _databaseService.getPerfil(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const LinearProgressIndicator();
+                          } else {
+                            Perfil perfil = snapshot.data!;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  perfil.nombre,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  perfil.carrera,
+                                  style: const TextStyle(
+                                    fontSize: 16
+                                  ),
+                                ),
+                                Text(
+                                  perfil.correo,
+                                  style: const TextStyle(
+                                    fontSize: 16
+                                  ),
+                                ),
+                                Text(
+                                  perfil.cuenta.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 16
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        } 
                       ),
                     ),
                     IconButton(
@@ -83,7 +87,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       onPressed: () {
                         context.push(
                           '/editarPerfil',
-                          extra: datos,
                         );
                       }
                     ),
