@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pumiagenda/custom_widgets.dart';
+// import 'package:pumiagenda/services/database_service.dart';
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
 
@@ -10,6 +11,8 @@ class PantallaInicio extends StatefulWidget {
 }
 
 class _PantallaInicioState extends State<PantallaInicio> {
+  // final DatabaseService _databaseService = DatabaseService();
+
   var datos = {
     'nombre': 'Diego Andres Rios Pineda',
     'correo': 'driosp@unah.hn',
