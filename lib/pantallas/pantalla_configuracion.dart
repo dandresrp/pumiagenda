@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pumiagenda/custom_widgets.dart';
 import 'package:go_router/go_router.dart';
-
 
 class PantallaConfiguracion extends StatefulWidget {
   const PantallaConfiguracion({super.key});
@@ -21,21 +19,20 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ajustes'),
+        title: const Text('Configuración'),
         centerTitle: true,
       ),
       body: ListView(
         children: [
           ListTile(
-            title: const Text('Perfil'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-                        context.push(
-                          '/editarPerfil',
-                          extra: datos,
-                        );
-                      }
-          ),
+              title: const Text('Editar perfil'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                context.push(
+                  '/editarPerfil',
+                  extra: datos,
+                );
+              }),
           ListTile(
             title: const Text('Acerca de'),
             trailing: const Icon(Icons.chevron_right),
@@ -45,7 +42,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           ),
         ],
       ),
-      bottomNavigationBar: const BarraInferior(currentIndex: 2,),
     );
   }
 }

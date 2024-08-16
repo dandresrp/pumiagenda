@@ -94,7 +94,7 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
     _cuentaController.text = widget.extrasData['cuenta'];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Perfil'),
+        title: const Text('Editar perfil'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

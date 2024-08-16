@@ -4,7 +4,7 @@ import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
 import 'package:pumiagenda/pantallas/pantalla_detalles.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
 import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
-import 'package:pumiagenda/pantallas/pantalla_edit_perfil.dart';
+import 'package:pumiagenda/pantallas/pantalla_editar_perfil.dart';
 import 'package:pumiagenda/pantallas/pantalla_ambito.dart';
 import 'package:pumiagenda/pantallas/pantalla_registro.dart';
 import 'package:pumiagenda/pantallas/pantalla_configuracion.dart';
