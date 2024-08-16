@@ -24,8 +24,11 @@ class DatabaseService {
 
   /* PERFILES */
 
-  Stream<QuerySnapshot> getPerfiles() {
-    return _perfilesRef.snapshots();
+  Future<Perfil> getPerfil() async {
+    DocumentSnapshot perfil = await FirebaseFirestore.instance.collection(perfilesCollectionRef).doc('fUqOvARbo8CjByzoRCxD').get();
+    Perfil usuario = Perfil.fromJson(perfil.data() as Map<String, dynamic>);
+    // Perfil usuarioVacio = Perfil(nombre: "nombre", correo: "correo", carrera: "carrera", cuenta: 0, fechaCreacion: Timestamp.now());
+    return usuario ;
   }
 
   void addPerfil(Perfil perfil) async {
