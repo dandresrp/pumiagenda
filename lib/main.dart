@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
 import 'package:pumiagenda/pantallas/pantalla_detalles.dart';
 import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
@@ -9,7 +11,12 @@ import 'package:pumiagenda/pantallas/pantalla_ambito.dart';
 import 'package:pumiagenda/pantallas/pantalla_registro.dart';
 import 'package:pumiagenda/pantallas/pantalla_configuracion.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   runApp(const MyApp());
 }
 
