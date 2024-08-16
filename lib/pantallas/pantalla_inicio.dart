@@ -95,7 +95,6 @@ class _PantallaInicioState extends State<PantallaInicio> {
           ],
         ),
       ),
-      bottomNavigationBar: const BarraInferior(currentIndex: 0,),
     );
   }
 }

@@ -3,7 +3,12 @@ import 'package:go_router/go_router.dart';
 
 class BarraInferior extends StatefulWidget {
   final int currentIndex;
-  const BarraInferior({required this.currentIndex, super.key});
+  final PageController pageController;
+  const BarraInferior({
+    required this.currentIndex, 
+    required this.pageController, 
+    super.key,
+  });
 
   @override
   State<BarraInferior> createState() => _BarraInferiorState();
@@ -18,28 +23,22 @@ class _BarraInferiorState extends State<BarraInferior> {
     currentPageIndex = widget.currentIndex;
   }
 
-  void _navigateToPage(int index) {
-    switch (index) {
-      case 0:
-        context.push('/');
-        break;
-      case 1:
-        context.push('/horasvoae');
-        break;
-      // case 2:
-      //   GoRouter.of(context).go('/configuracion');
-      //   break;
-    }
+  void _onDestinationSelected(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+    widget.pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
       onDestinationSelected: (int index) {
-        setState(() {
-          currentPageIndex = index;
-          _navigateToPage(index);
-        });
+        _onDestinationSelected(index);
       },
       selectedIndex: currentPageIndex,
       destinations: const [
@@ -59,6 +58,7 @@ class _BarraInferiorState extends State<BarraInferior> {
     );
   }
 }
+
 
 class CardHorasInicio extends StatelessWidget {
   final String ambito;
