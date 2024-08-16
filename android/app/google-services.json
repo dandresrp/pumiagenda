@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894927267944",
+    "project_id": "pumiagenda-be34b",
+    "storage_bucket": "pumiagenda-be34b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894927267944:android:95d7f0e52c148d81d033dd",
+        "android_client_info": {
+          "package_name": "com.example.pumiagenda"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDWlQL8o8nIPp7Bx9WL1Cm4VaCKzoSNik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

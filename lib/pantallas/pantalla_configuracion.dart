@@ -32,7 +32,8 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                   '/editarPerfil',
                   extra: datos,
                 );
-              }),
+              }
+            ),
           ListTile(
             title: const Text('Acerca de'),
             trailing: const Icon(Icons.chevron_right),
