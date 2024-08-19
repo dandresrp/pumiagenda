@@ -5,8 +5,8 @@ class BarraInferior extends StatefulWidget {
   final int currentIndex;
   final PageController pageController;
   const BarraInferior({
-    required this.currentIndex, 
-    required this.pageController, 
+    required this.currentIndex,
+    required this.pageController,
     super.key,
   });
 
@@ -58,7 +58,6 @@ class _BarraInferiorState extends State<BarraInferior> {
     );
   }
 }
-
 
 class CardHorasInicio extends StatelessWidget {
   final String ambito;
@@ -121,67 +120,6 @@ class CardHorasVoae extends StatelessWidget {
                 radius: 30.0,
                 child: icon,
               )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-//card Roberto
-class ActividadCard extends StatelessWidget {
-  final String nombre;
-  final String fecha;
-
-  const ActividadCard({super.key, required this.nombre, required this.fecha});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(15.0),
-      onTap: () => context.push('/detalles', extra: nombre), 
-      child: Card(
-        elevation: 2.0,
-        child:
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    nombre,
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0), 
-                      minimumSize: const Size(0, 0), 
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap
-                    ),
-                    onPressed: () => context.push('/detalles', extra: nombre),
-                    child: const Text(
-                      'Detalles',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Text(
-                fecha,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
             ],
           ),
         ),
