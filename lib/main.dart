@@ -27,7 +27,6 @@ void main() async {
 }
 
 GoRouter router = GoRouter(
-  initialLocation: '/acerca',
   routes: [
     GoRoute(
       path: '/',
