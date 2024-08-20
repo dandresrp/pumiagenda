@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:pumiagenda/custom_widgets.dart';
 
@@ -10,147 +10,6 @@ class PantallaHorasVoae extends StatefulWidget {
 }
 
 class _PantallaHorasVoaeState extends State<PantallaHorasVoae> {
-  final TextEditingController nombreActividadController =
-      TextEditingController();
-  final TextEditingController descripcionController = TextEditingController();
-  final TextEditingController horasAcademicasController =
-      TextEditingController();
-  final TextEditingController horasSocialesController = TextEditingController();
-  final TextEditingController horasCulturalesController =
-      TextEditingController();
-  final TextEditingController horasDeportivasController =
-      TextEditingController();
-
-  Future<void> addActividad(
-    String nombreActividad,
-    String descripcion,
-    int horasAcademicas,
-    int horasSociales,
-    int horasCulturales,
-    int horasDeportivas,
-  ) {
-    return FirebaseFirestore.instance.collection('actividadesvoae').add({
-      'nombreActividad': nombreActividad,
-      'descripcion': descripcion,
-      'horasAcademicas': horasAcademicas,
-      'horasSociales': horasSociales,
-      'horasCulturales': horasCulturales,
-      'horasDeportivas': horasDeportivas,
-      'fechaActividad': Timestamp.now(),
-      'fechaCreacion': Timestamp.now(),
-      'fechaActualizacion': Timestamp.now(),
-    });
-  }
-
-  void dialogoCrearActividad() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        insetPadding: EdgeInsets.zero,
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nombreActividadController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Actividad',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: descripcionController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Descripción',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: horasAcademicasController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Horas académicas',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: horasSocialesController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Horas sociales',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: horasCulturalesController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Horas culturales',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: horasDeportivasController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Horas deportivas',
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              addActividad(
-                nombreActividadController.text,
-                descripcionController.text,
-                int.parse(horasAcademicasController.text),
-                int.parse(horasSocialesController.text),
-                int.parse(horasCulturalesController.text),
-                int.parse(horasDeportivasController.text),
-              );
-
-              nombreActividadController.clear();
-              descripcionController.clear();
-              horasAcademicasController.clear();
-              horasSocialesController.clear();
-              horasCulturalesController.clear();
-              horasDeportivasController.clear();
-
-              Navigator.pop(context);
-            },
-            child: const Text("Añadir"),
-          )
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +60,7 @@ class _PantallaHorasVoaeState extends State<PantallaHorasVoae> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: dialogoCrearActividad,
+          onPressed: () => context.push('/nuevaActividad'),
           child: const Icon(Icons.add),
         ));
   }
