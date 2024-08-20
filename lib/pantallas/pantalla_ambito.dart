@@ -47,8 +47,16 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
                 String nombreActividad = data['nombreActividad'];
+                 Timestamp fechaActividad = data['fechaActividad'];
+                //Convertir fecha a String
+                Timestamp timestamp = fechaActividad; // Reemplaza con tu Timestamp
+                DateTime dateTime = timestamp.toDate();
+                String formattedDate = '${dateTime.day.toString().padLeft(2, '0')}/'
+                       '${dateTime.month.toString().padLeft(2, '0')}/'
+                       '${dateTime.year.toString().substring(2)}';
                 return GestureDetector(
                   child: Container(
+                    margin: const EdgeInsets.only(top: 15),
                     decoration: BoxDecoration(
                       border: Border.all(width: 1),
                       borderRadius: BorderRadius.circular(15.0),
@@ -59,11 +67,17 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      subtitle: const Text("Detalles..."),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete),
-                      ),
+                      subtitle:  Text(formattedDate),
+                      trailing: PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/configuracion');
+                            }, child: const Text('Editar')
+                          ),
+                          
+                          const PopupMenuItem(child: Text('Eliminar'))
+                        ])
                     ),
                   ),
                 );
