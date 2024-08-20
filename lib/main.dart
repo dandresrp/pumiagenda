@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pumiagenda/pantallas/pantalla_acercade.dart';
 import 'firebase_options.dart';
 import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
 import 'package:pumiagenda/pantallas/pantalla_detalles.dart';
@@ -26,6 +27,7 @@ void main() async {
 }
 
 GoRouter router = GoRouter(
+  initialLocation: '/acerca',
   routes: [
     GoRoute(
       path: '/',
@@ -67,6 +69,10 @@ GoRouter router = GoRouter(
     GoRoute(
       path: '/configuracion',
       builder: (context, state) => const PantallaConfiguracion(),
+    ),
+    GoRoute(
+      path: '/acerca',
+      builder: (context, state) => const PantallaAcercade(),
     )
   ]
 );

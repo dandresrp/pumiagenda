@@ -38,7 +38,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             title: const Text('Acerca de'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              context.push('/acerca');
+              
             },
           ),
         ],
