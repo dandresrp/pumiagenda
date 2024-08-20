@@ -72,7 +72,7 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             onTap: () {
-                              Navigator.pushNamed(context, '/configuracion');
+                              Navigator.pushNamed(context, '/inicio');
                             }, child: const Text('Editar')
                           ),
                           
