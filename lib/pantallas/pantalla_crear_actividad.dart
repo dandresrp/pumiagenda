@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 
 class NuevaActividad extends StatefulWidget {
@@ -28,6 +31,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
   bool culturalIsChecked = false;
   bool deportivoIsChecked = false;
   late Timestamp fechaActividad;
+  List<PlatformFile> archivos = [];
 
   Future<void> addActividad(
     String nombreActividad,
@@ -37,6 +41,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
     int horasSociales,
     int horasCulturales,
     int horasDeportivas,
+    // String urlArchivoPDF,
   ) {
     return FirebaseFirestore.instance.collection('actividadesvoae').add({
       'nombreActividad': nombreActividad,
@@ -48,6 +53,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
       'fechaActividad': fechaActividad,
       'fechaCreacion': Timestamp.now(),
       'fechaActualizacion': Timestamp.now(),
+      // 'archivoPDF': urlArchivoPDF,
     });
   }
 
@@ -70,6 +76,20 @@ class _NuevaActividadState extends State<NuevaActividad> {
     );
   }
 
+  Future<List<PlatformFile>?> seleccionarArchivos() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      allowMultiple: true,
+    );
+
+    if (result != null) {
+      return result.files;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,10 +102,10 @@ class _NuevaActividadState extends State<NuevaActividad> {
                 nombreActividadController.text,
                 fechaActividad,
                 descripcionController.text,
-                int.parse(horasAcademicasController.text),
-                int.parse(horasSocialesController.text),
-                int.parse(horasCulturalesController.text),
-                int.parse(horasDeportivasController.text),
+                int.tryParse(horasAcademicasController.text) ?? 0,
+                int.tryParse(horasSocialesController.text) ?? 0,
+                int.tryParse(horasCulturalesController.text) ?? 0,
+                int.tryParse(horasDeportivasController.text) ?? 0,
               );
 
               nombreActividadController.clear();
@@ -186,10 +206,14 @@ class _NuevaActividadState extends State<NuevaActividad> {
                 child: Column(
                   children: [
                     const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Ámbitos:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         )
                       ],
                     ),
@@ -228,6 +252,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 enabled: academicoIsChecked,
                                 controller: horasAcademicasController,
                                 keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -266,6 +291,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                               child: TextField(
                                 enabled: socialIsChecked,
                                 controller: horasSocialesController,
+                                textAlign: TextAlign.center,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -303,6 +329,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 enabled: culturalIsChecked,
                                 controller: horasCulturalesController,
                                 keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -339,6 +366,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 enabled: deportivoIsChecked,
                                 controller: horasDeportivasController,
                                 keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -353,7 +381,57 @@ class _NuevaActividadState extends State<NuevaActividad> {
                     ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size.fromHeight(50)),
+                    onPressed: () async {
+                      final seleccion = await seleccionarArchivos();
+                      if (seleccion != null) {
+                        setState(() {
+                          archivos.addAll(seleccion);
+                        });
+                      }
+                    },
+                    label: const Text('Subir archivo'),
+                    icon: const Icon(Icons.file_upload),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              archivos.isNotEmpty
+                  ? Column(
+                      children: archivos.map((archivo) {
+                        return ListTile(
+                          leading: const Icon(Icons.picture_as_pdf),
+                          title: Text(archivo.name),
+                          trailing: PopupMenuButton(
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                onTap: () {},
+                                child: const Text('Vista previa'),
+                              ),
+                              PopupMenuItem(
+                                onTap: () {
+                                  setState(() {
+                                    archivos.remove(archivo);
+                                  });
+                                },
+                                child: const Text('Eliminar'),
+                              )
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  : const Text('No se ha seleccionado ningún archivo'),
             ],
           ),
         ),
