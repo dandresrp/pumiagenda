@@ -95,6 +95,7 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                                     .collection('actividadesvoae')
                                     .doc(docId)
                                     .delete();
+                                  // ignore: use_build_context_synchronously
                                   ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('$nombreActividad eliminada'),
@@ -109,10 +110,94 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                               //   //eliminar actividad 
 
                               // },  
+                              
                               child: const Text('Eliminar'),
                             ),
                           ),
-                        ])
+                        ]) 
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      //PopupMenuButton(
+                      //   itemBuilder: (context) => [
+                      //     PopupMenuItem(
+                      //       child: TextButton(
+                      //         onPressed: () {
+                      //           context.push(
+                      //             '/horasVoae',
+                      //           );
+                      //         },  
+                      //         child: const Text('Editar'),
+                      //       ),
+                      //     ),
+                      //     PopupMenuItem(
+                      //       child: TextButton(
+                      //         onPressed: () async {
+                      //           // Eliminar actividad de Firebase
+                      //           await FirebaseFirestore.instance
+                      //               .collection('actividadesvoae')
+                      //               .doc(docId)
+                      //               .delete();
+                      //             // ignore: use_build_context_synchronously
+                      //             ScaffoldMessenger.of(context).showSnackBar(
+                      //             SnackBar(
+                      //               content: Text('$nombreActividad eliminada'),
+                      //             ),
+                      //           );
+                      //         },
+                      //         child: const Text('Eliminar'),
+                      //       ),
+                      //       onTap: () {
+                      //         Navigator.pushNamed(context, '/inicio');
+                      //       }, 
+                      //     ),
+                      //   ])
                     ),
                   ),
                 );
