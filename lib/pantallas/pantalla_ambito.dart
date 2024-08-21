@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 // import 'package:pumiagenda/custom_widgets.dart';
 
 class PantallaAmbito extends StatefulWidget {
@@ -39,21 +40,26 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
               padding: const EdgeInsets.all(16.0),
               itemCount: listaActividades.length,
               itemBuilder: (context, index) {
+
                 // Obtener cada documento
                 DocumentSnapshot document = listaActividades[index];
-                // String docId = document.id;
+
+                //Obtener Id del documento (para eliminar)
+                String docId = document.id;
 
                 // Obtener la actividad de cada documento
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
                 String nombreActividad = data['nombreActividad'];
                  Timestamp fechaActividad = data['fechaActividad'];
+
                 //Convertir fecha a String
-                Timestamp timestamp = fechaActividad; // Reemplaza con tu Timestamp
+                Timestamp timestamp = fechaActividad; 
                 DateTime dateTime = timestamp.toDate();
                 String formattedDate = '${dateTime.day.toString().padLeft(2, '0')}/'
                        '${dateTime.month.toString().padLeft(2, '0')}/'
                        '${dateTime.year.toString().substring(2)}';
+
                 return GestureDetector(
                   child: Container(
                     margin: const EdgeInsets.only(top: 15),
@@ -65,18 +71,47 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                       title: Text(
                         nombreActividad,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold
+                        ),
                       ),
                       subtitle:  Text(formattedDate),
                       trailing: PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/configuracion');
-                            }, child: const Text('Editar')
+                            child: TextButton(
+                              onPressed: () {
+                                context.push(
+                                  '/horasVoae',
+                                );
+                              },  
+                              child: const Text('Editar'),
+                            ),
                           ),
-                          
-                          const PopupMenuItem(child: Text('Eliminar'))
+                          PopupMenuItem(
+                            child: TextButton(
+                              onPressed: () async {
+                                // Eliminar actividad de Firebase
+                                await FirebaseFirestore.instance
+                                    .collection('actividadesvoae')
+                                    .doc(docId)
+                                    .delete();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('$nombreActividad eliminada'),
+                                  ),
+                                );
+                              },
+
+                              // onPressed: () {
+                              //   context.push(
+                              //     '/horasVoae',
+                              //   );
+                              //   //eliminar actividad 
+
+                              // },  
+                              child: const Text('Eliminar'),
+                            ),
+                          ),
                         ])
                     ),
                   ),
