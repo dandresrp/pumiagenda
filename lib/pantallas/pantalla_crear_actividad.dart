@@ -87,6 +87,27 @@ class _NuevaActividadState extends State<NuevaActividad> {
                 int.parse(horasCulturalesController.text),
                 int.parse(horasDeportivasController.text),
               );
+
+              nombreActividadController.clear();
+              fechaActividadController.clear();
+              descripcionController.clear();
+              horasAcademicasController.clear();
+              horasSocialesController.clear();
+              horasCulturalesController.clear();
+              horasDeportivasController.clear();
+
+              setState(() {
+                academicoIsChecked = false;
+                socialIsChecked = false;
+                culturalIsChecked = false;
+                deportivoIsChecked = false;
+              });
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Actividad creada exitosamente!'),
+                ),
+              );
             },
             label: const Text('Guardar'),
             icon: const Icon(Icons.save),
