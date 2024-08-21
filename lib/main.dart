@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:pumiagenda/pantallas/pantalla_acercade.dart';
 import 'pantallas/pantalla_crear_actividad.dart';
 import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
 import 'package:pumiagenda/pantallas/pantalla_detalles.dart';
@@ -45,7 +44,7 @@ GoRouter router = GoRouter(
           return PantallaEditarPerfil(extrasData: extrasData);
         }),
     GoRoute(
-      path: '/horasvoae',
+      path: '/horasVoae',
       builder: (context, state) => const PantallaHorasVoae(),
     ),
     GoRoute(
@@ -65,10 +64,6 @@ GoRouter router = GoRouter(
     GoRoute(
       path: '/configuracion',
       builder: (context, state) => const PantallaConfiguracion(),
-    ),
-    GoRoute(
-      path: '/acerca',
-      builder: (context, state) => const PantallaAcercade(),
     ),
     GoRoute(
       path: '/nuevaActividad',
