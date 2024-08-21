@@ -11,6 +11,23 @@ class PantallaEditarActividad extends StatefulWidget {
 }
 
 class _NuevaActividadState extends State<PantallaEditarActividad> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.extrasData['horasSociales'] > 0) {
+      socialIsChecked = true;
+    }
+    if (widget.extrasData['horasDeportivas'] > 0) {
+      deportivoIsChecked = true;
+    }
+    if (widget.extrasData['horasCulturales'] > 0) {
+      culturalIsChecked = true;
+    }
+    if (widget.extrasData['horasAcademicas'] > 0) {
+      academicoIsChecked = true;
+    }
+  }
+
   Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(
       actividadId) async {
     return await FirebaseFirestore.instance
@@ -99,28 +116,6 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         widget.extrasData['horasSociales'].toString();
     horasDeportivasController.text =
         widget.extrasData['horasDeportivas'].toString();
-
-    //valida que horas no son 0
-    if (widget.extrasData['horasSociales'] > 0) {
-      setState(() {
-        socialIsChecked = true;
-      });
-    }
-    if (widget.extrasData['horasDeportivas'] > 0) {
-      setState(() {
-        deportivoIsChecked = true;
-      });
-    }
-    if (widget.extrasData['horasCulturales'] > 0) {
-      setState(() {
-        culturalIsChecked = true;
-      });
-    }
-    if (widget.extrasData['horasAcademicas'] > 0) {
-      setState(() {
-        academicoIsChecked = true;
-      });
-    }
 
     return Scaffold(
       appBar: AppBar(
