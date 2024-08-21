@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pumiagenda/pantallas/pantalla_editar_actividad.dart';
 import 'firebase_options.dart';
 import 'pantallas/pantalla_crear_actividad.dart';
 import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
@@ -68,7 +69,14 @@ GoRouter router = GoRouter(
     GoRoute(
       path: '/nuevaActividad',
       builder: (context, state) => const NuevaActividad(),
-    )
+    ),
+    GoRoute(
+      path: '/editarActividad',
+      builder: (context, state) {
+        final extrasData = state.extra as dynamic;
+        return PantallaEditarActividad(extrasData: extrasData);
+      },
+    ),
   ],
 );
 
