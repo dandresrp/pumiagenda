@@ -2,29 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-
 class PantallaEditarActividad extends StatefulWidget {
   final dynamic extrasData;
-  const PantallaEditarActividad({super.key,required this.extrasData});
+  const PantallaEditarActividad({super.key, required this.extrasData});
 
   @override
   State<PantallaEditarActividad> createState() => _NuevaActividadState();
 }
 
 class _NuevaActividadState extends State<PantallaEditarActividad> {
-  Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(actividadId) async {
+  Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(
+      actividadId) async {
     return await FirebaseFirestore.instance
         .collection('actividadesvoae')
         .doc(actividadId)
         .get();
   }
-  final TextEditingController nombreActividadController = TextEditingController();
-  final TextEditingController fechaActividadController = TextEditingController();
+
+  final TextEditingController nombreActividadController =
+      TextEditingController();
+  final TextEditingController fechaActividadController =
+      TextEditingController();
   final TextEditingController descripcionController = TextEditingController();
-  final TextEditingController horasAcademicasController = TextEditingController();
+  final TextEditingController horasAcademicasController =
+      TextEditingController();
   final TextEditingController horasSocialesController = TextEditingController();
-  final TextEditingController horasCulturalesController = TextEditingController();
-  final TextEditingController horasDeportivasController = TextEditingController();
+  final TextEditingController horasCulturalesController =
+      TextEditingController();
+  final TextEditingController horasDeportivasController =
+      TextEditingController();
 
   bool academicoIsChecked = false;
   bool socialIsChecked = false;
@@ -41,17 +47,19 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     int horasCulturales,
     int horasDeportivas,
   ) {
-    return FirebaseFirestore.instance.collection('actividadesvoae').add({
-      'nombreActividad': nombreActividad,
-      'descripcion': descripcion,
-      'horasAcademicas': horasAcademicas,
-      'horasSociales': horasSociales,
-      'horasCulturales': horasCulturales,
-      'horasDeportivas': horasDeportivas,
-      'fechaActividad': fechaActividad,
-      'fechaCreacion': Timestamp.now(),
-      'fechaActualizacion': Timestamp.now(),
-    });
+    return FirebaseFirestore.instance.collection('actividadesvoae').add(
+      {
+        'nombreActividad': nombreActividad,
+        'descripcion': descripcion,
+        'horasAcademicas': horasAcademicas,
+        'horasSociales': horasSociales,
+        'horasCulturales': horasCulturales,
+        'horasDeportivas': horasDeportivas,
+        'fechaActividad': fechaActividad,
+        'fechaCreacion': Timestamp.now(),
+        'fechaActualizacion': Timestamp.now(),
+      },
+    );
   }
 
   void _showDatePicker() {
@@ -63,11 +71,13 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     ).then(
       (value) {
         if (value != null) {
-          setState(() {
-            fechaActividad = Timestamp.fromDate(value);
-            fechaActividadController.text =
-                DateFormat('dd/MM/yyyy').format(value);
-          });
+          setState(
+            () {
+              fechaActividad = Timestamp.fromDate(value);
+              fechaActividadController.text =
+                  DateFormat('dd/MM/yyyy').format(value);
+            },
+          );
         }
       },
     );
@@ -75,20 +85,50 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
 
   @override
   Widget build(BuildContext context) {
-    nombreActividadController.text= widget.extrasData['nombreActividad'];
+    //Recolecta informacion de la actividad
+    nombreActividadController.text = widget.extrasData['nombreActividad'];
     descripcionController.text = widget.extrasData['descripcion'];
     DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
-    fechaActividadController.text = DateFormat('dd/MM/yyyy').format(fechaActividad);
-    horasAcademicasController.text = widget.extrasData['horasAcademicas'].toString();
-    horasCulturalesController.text = widget.extrasData['horasCulturales'].toString();
-    horasSocialesController.text = widget.extrasData['horasSociales'].toString();
-    horasDeportivasController.text = widget.extrasData['horasDeportivas'].toString();
+    fechaActividadController.text =
+        DateFormat('dd/MM/yyyy').format(fechaActividad);
+    horasAcademicasController.text =
+        widget.extrasData['horasAcademicas'].toString();
+    horasCulturalesController.text =
+        widget.extrasData['horasCulturales'].toString();
+    horasSocialesController.text =
+        widget.extrasData['horasSociales'].toString();
+    horasDeportivasController.text =
+        widget.extrasData['horasDeportivas'].toString();
+
+    //valida que horas no son 0
+    if (widget.extrasData['horasSociales'] > 0) {
+      setState(() {
+        socialIsChecked = true;
+      });
+    }
+    if (widget.extrasData['horasDeportivas'] > 0) {
+      setState(() {
+        deportivoIsChecked = true;
+      });
+    }
+    if (widget.extrasData['horasCulturales'] > 0) {
+      setState(() {
+        culturalIsChecked = true;
+      });
+    }
+    if (widget.extrasData['horasAcademicas'] > 0) {
+      setState(() {
+        academicoIsChecked = true;
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Actividad'),
         actions: [
           ElevatedButton.icon(
             onPressed: () {
+              //AQUI SE GUARDA TODOO
               // addActividad(
               //   nombreActividadController.text,
               //   fechaActividad,
@@ -196,9 +236,11 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                                 Checkbox(
                                   value: academicoIsChecked,
                                   onChanged: (value) {
-                                    setState(() {
-                                      academicoIsChecked = value!;
-                                    });
+                                    setState(
+                                      () {
+                                        academicoIsChecked = value!;
+                                      },
+                                    );
                                   },
                                 ),
                                 const Text('Científico/Académico'),
@@ -238,9 +280,11 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                                 Checkbox(
                                   value: socialIsChecked,
                                   onChanged: (value) {
-                                    setState(() {
-                                      socialIsChecked = value!;
-                                    });
+                                    setState(
+                                      () {
+                                        socialIsChecked = value!;
+                                      },
+                                    );
                                   },
                                 ),
                                 const Text('Social'),
