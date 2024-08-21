@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+
 class PantallaEditarActividad extends StatefulWidget {
   final dynamic extrasData;
   const PantallaEditarActividad({super.key,required this.extrasData});
@@ -76,7 +77,8 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
   Widget build(BuildContext context) {
     nombreActividadController.text= widget.extrasData['nombreActividad'];
     descripcionController.text = widget.extrasData['descripcion'];
-    fechaActividadController.text = widget.extrasData['fechaActividad'].toString();
+    DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
+    fechaActividadController.text = DateFormat('dd/MM/yyyy').format(fechaActividad);
     horasAcademicasController.text = widget.extrasData['horasAcademicas'].toString();
     horasCulturalesController.text = widget.extrasData['horasCulturales'].toString();
     horasSocialesController.text = widget.extrasData['horasSociales'].toString();
@@ -87,15 +89,15 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         actions: [
           ElevatedButton.icon(
             onPressed: () {
-              addActividad(
-                nombreActividadController.text,
-                fechaActividad,
-                descripcionController.text,
-                int.parse(horasAcademicasController.text),
-                int.parse(horasSocialesController.text),
-                int.parse(horasCulturalesController.text),
-                int.parse(horasDeportivasController.text),
-              );
+              // addActividad(
+              //   nombreActividadController.text,
+              //   fechaActividad,
+              //   descripcionController.text,
+              //   int.parse(horasAcademicasController.text),
+              //   int.parse(horasSocialesController.text),
+              //   int.parse(horasCulturalesController.text),
+              //   int.parse(horasDeportivasController.text),
+              // );
             },
             label: const Text('Modificar'),
             icon: const Icon(Icons.save),
