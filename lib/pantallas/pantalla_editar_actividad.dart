@@ -26,6 +26,21 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     if (widget.extrasData['horasAcademicas'] > 0) {
       academicoIsChecked = true;
     }
+
+    //Recolecta informacion de la actividad
+    nombreActividadController.text = widget.extrasData['nombreActividad'];
+    descripcionController.text = widget.extrasData['descripcion'];
+    DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
+    fechaActividadController.text =
+        DateFormat('dd/MM/yyyy').format(fechaActividad);
+    horasAcademicasController.text =
+        widget.extrasData['horasAcademicas'].toString();
+    horasCulturalesController.text =
+        widget.extrasData['horasCulturales'].toString();
+    horasSocialesController.text =
+        widget.extrasData['horasSociales'].toString();
+    horasDeportivasController.text =
+        widget.extrasData['horasDeportivas'].toString();
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(
@@ -102,21 +117,6 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
 
   @override
   Widget build(BuildContext context) {
-    //Recolecta informacion de la actividad
-    nombreActividadController.text = widget.extrasData['nombreActividad'];
-    descripcionController.text = widget.extrasData['descripcion'];
-    DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
-    fechaActividadController.text =
-        DateFormat('dd/MM/yyyy').format(fechaActividad);
-    horasAcademicasController.text =
-        widget.extrasData['horasAcademicas'].toString();
-    horasCulturalesController.text =
-        widget.extrasData['horasCulturales'].toString();
-    horasSocialesController.text =
-        widget.extrasData['horasSociales'].toString();
-    horasDeportivasController.text =
-        widget.extrasData['horasDeportivas'].toString();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Actividad'),
