@@ -84,7 +84,13 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                                   '/horasVoae',
                                 );
                               },  
-                              child: const Text('Editar'),
+                              child: const Row(
+                              children: [
+                                Icon(Icons.edit, size: 18),
+                                SizedBox(width: 8),
+                                Text('Editar'),
+                              ],
+                            ),
                             ),
                           ),
                           PopupMenuItem(
@@ -95,21 +101,20 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                                     .collection('actividadesvoae')
                                     .doc(docId)
                                     .delete();
+                                  // ignore: use_build_context_synchronously
                                   ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('$nombreActividad eliminada'),
                                   ),
                                 );
                               },
-
-                              // onPressed: () {
-                              //   context.push(
-                              //     '/horasVoae',
-                              //   );
-                              //   //eliminar actividad 
-
-                              // },  
-                              child: const Text('Eliminar'),
+                              child: const Row(
+                              children: [
+                                Icon(Icons.delete, size: 18),
+                                SizedBox(width: 8),
+                                Text('Eliminar'),
+                              ],
+                            ),
                             ),
                           ),
                         ])
