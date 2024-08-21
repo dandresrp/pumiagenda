@@ -40,7 +40,6 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
               padding: const EdgeInsets.all(16.0),
               itemCount: listaActividades.length,
               itemBuilder: (context, index) {
-
                 // Obtener cada documento
                 DocumentSnapshot document = listaActividades[index];
 
@@ -51,14 +50,15 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
                 String nombreActividad = data['nombreActividad'];
-                 Timestamp fechaActividad = data['fechaActividad'];
+                Timestamp fechaActividad = data['fechaActividad'];
 
                 //Convertir fecha a String
-                Timestamp timestamp = fechaActividad; 
+                Timestamp timestamp = fechaActividad;
                 DateTime dateTime = timestamp.toDate();
-                String formattedDate = '${dateTime.day.toString().padLeft(2, '0')}/'
-                       '${dateTime.month.toString().padLeft(2, '0')}/'
-                       '${dateTime.year.toString().substring(2)}';
+                String formattedDate =
+                    '${dateTime.day.toString().padLeft(2, '0')}/'
+                    '${dateTime.month.toString().padLeft(2, '0')}/'
+                    '${dateTime.year.toString().substring(2)}';
 
                 return GestureDetector(
                   child: Container(
@@ -71,133 +71,38 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                       title: Text(
                         nombreActividad,
                         style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      subtitle:  Text(formattedDate),
+                      subtitle: Text(formattedDate),
                       trailing: PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            child: TextButton(
-                              onPressed: () {
-                                context.push(
-                                  '/horasVoae',
-                                );
-                              },  
-                              child: const Text('Editar'),
-                            ),
+                            onTap: () {
+                              context.push(
+                                '/editarActividad',
+                                extra: data,
+                              );
+                            },
+                            child: const Text('Editar'),
                           ),
                           PopupMenuItem(
-                            child: TextButton(
-                              onPressed: () async {
-                                // Eliminar actividad de Firebase
-                                await FirebaseFirestore.instance
-                                    .collection('actividadesvoae')
-                                    .doc(docId)
-                                    .delete();
-                                  // ignore: use_build_context_synchronously
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('$nombreActividad eliminada'),
-                                  ),
-                                );
-                              },
-
-                              // onPressed: () {
-                              //   context.push(
-                              //     '/horasVoae',
-                              //   );
-                              //   //eliminar actividad 
-
-                              // },  
-                              
-                              child: const Text('Eliminar'),
-                            ),
+                            onTap: () async {
+                              // Eliminar actividad de Firebase
+                              await FirebaseFirestore.instance
+                                  .collection('actividadesvoae')
+                                  .doc(docId)
+                                  .delete();
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('$nombreActividad eliminada'),
+                                ),
+                              );
+                            },
+                            child: const Text('Eliminar'),
                           ),
-                        ]) 
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      
-                      //PopupMenuButton(
-                      //   itemBuilder: (context) => [
-                      //     PopupMenuItem(
-                      //       child: TextButton(
-                      //         onPressed: () {
-                      //           context.push(
-                      //             '/horasVoae',
-                      //           );
-                      //         },  
-                      //         child: const Text('Editar'),
-                      //       ),
-                      //     ),
-                      //     PopupMenuItem(
-                      //       child: TextButton(
-                      //         onPressed: () async {
-                      //           // Eliminar actividad de Firebase
-                      //           await FirebaseFirestore.instance
-                      //               .collection('actividadesvoae')
-                      //               .doc(docId)
-                      //               .delete();
-                      //             // ignore: use_build_context_synchronously
-                      //             ScaffoldMessenger.of(context).showSnackBar(
-                      //             SnackBar(
-                      //               content: Text('$nombreActividad eliminada'),
-                      //             ),
-                      //           );
-                      //         },
-                      //         child: const Text('Eliminar'),
-                      //       ),
-                      //       onTap: () {
-                      //         Navigator.pushNamed(context, '/inicio');
-                      //       }, 
-                      //     ),
-                      //   ])
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -211,60 +116,3 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
     );
   }
 }
-
-// class Actividad {
-//   String nombre;
-//   DateTime fecha;
-//   String descripcion;
-//   List<Ambito> ambitos;
-
-//   Actividad({
-//     required this.nombre,
-//     required this.fecha,
-//     required this.descripcion,
-//     required this.ambitos,
-//   });
-// }
-
-// class Actividades {
-//   List<Actividad> listaActividades = [];
-//   Map<String, int> contadorPorAmbito = {
-//     'Social': 0,
-//     'Cultural': 0,
-//     'Artístico': 0,
-//     'Científico/Académico': 0,
-//   };
-
-//   // Método para añadir actividades
-//   void agregarActividad(Actividad actividad) {
-//     listaActividades.add(actividad);
-//     for (var ambito in actividad.ambitos) {
-//       if (contadorPorAmbito.containsKey(ambito.tipo)) {
-//         contadorPorAmbito[ambito.tipo] =
-//             contadorPorAmbito[ambito.tipo]! + ambito.horas;
-//       }
-//     }
-//   }
-
-//   // Método para filtrar actividades por ámbito
-//   List<Actividad> filtrarPorAmbito(String ambito) {
-//     return listaActividades.where((actividad) {
-//       return actividad.ambitos.any((a) => a.tipo == ambito);
-//     }).toList();
-//   }
-
-//   // Método para obtener el conteo de actividades por ámbito
-//   int obtenerConteoPorAmbito(String ambito) {
-//     return contadorPorAmbito[ambito] ?? 0;
-//   }
-// }
-
-// class Ambito {
-//   String tipo;
-//   int horas;
-
-//   Ambito({
-//     required this.tipo,
-//     required this.horas,
-//   });
-// }

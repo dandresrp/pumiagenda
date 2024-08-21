@@ -1,18 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 
-class NuevaActividad extends StatefulWidget {
-  const NuevaActividad({super.key});
+class PantallaEditarActividad extends StatefulWidget {
+  final dynamic extrasData;
+  const PantallaEditarActividad({super.key, required this.extrasData});
 
   @override
-  State<NuevaActividad> createState() => _NuevaActividadState();
+  State<PantallaEditarActividad> createState() => _NuevaActividadState();
 }
 
-class _NuevaActividadState extends State<NuevaActividad> {
+class _NuevaActividadState extends State<PantallaEditarActividad> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.extrasData['horasSociales'] > 0) {
+      socialIsChecked = true;
+    }
+    if (widget.extrasData['horasDeportivas'] > 0) {
+      deportivoIsChecked = true;
+    }
+    if (widget.extrasData['horasCulturales'] > 0) {
+      culturalIsChecked = true;
+    }
+    if (widget.extrasData['horasAcademicas'] > 0) {
+      academicoIsChecked = true;
+    }
+
+    //Recolecta informacion de la actividad
+    nombreActividadController.text = widget.extrasData['nombreActividad'];
+    descripcionController.text = widget.extrasData['descripcion'];
+    DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
+    fechaActividadController.text =
+        DateFormat('dd/MM/yyyy').format(fechaActividad);
+    horasAcademicasController.text =
+        widget.extrasData['horasAcademicas'].toString();
+    horasCulturalesController.text =
+        widget.extrasData['horasCulturales'].toString();
+    horasSocialesController.text =
+        widget.extrasData['horasSociales'].toString();
+    horasDeportivasController.text =
+        widget.extrasData['horasDeportivas'].toString();
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(
+      actividadId) async {
+    return await FirebaseFirestore.instance
+        .collection('actividadesvoae')
+        .doc(actividadId)
+        .get();
+  }
+
   final TextEditingController nombreActividadController =
       TextEditingController();
   final TextEditingController fechaActividadController =
@@ -31,7 +69,6 @@ class _NuevaActividadState extends State<NuevaActividad> {
   bool culturalIsChecked = false;
   bool deportivoIsChecked = false;
   late Timestamp fechaActividad;
-  List<PlatformFile> archivos = [];
 
   Future<void> addActividad(
     String nombreActividad,
@@ -41,20 +78,20 @@ class _NuevaActividadState extends State<NuevaActividad> {
     int horasSociales,
     int horasCulturales,
     int horasDeportivas,
-    // String urlArchivoPDF,
   ) {
-    return FirebaseFirestore.instance.collection('actividadesvoae').add({
-      'nombreActividad': nombreActividad,
-      'descripcion': descripcion,
-      'horasAcademicas': horasAcademicas,
-      'horasSociales': horasSociales,
-      'horasCulturales': horasCulturales,
-      'horasDeportivas': horasDeportivas,
-      'fechaActividad': fechaActividad,
-      'fechaCreacion': Timestamp.now(),
-      'fechaActualizacion': Timestamp.now(),
-      // 'archivoPDF': urlArchivoPDF,
-    });
+    return FirebaseFirestore.instance.collection('actividadesvoae').add(
+      {
+        'nombreActividad': nombreActividad,
+        'descripcion': descripcion,
+        'horasAcademicas': horasAcademicas,
+        'horasSociales': horasSociales,
+        'horasCulturales': horasCulturales,
+        'horasDeportivas': horasDeportivas,
+        'fechaActividad': fechaActividad,
+        'fechaCreacion': Timestamp.now(),
+        'fechaActualizacion': Timestamp.now(),
+      },
+    );
   }
 
   void _showDatePicker() {
@@ -66,70 +103,38 @@ class _NuevaActividadState extends State<NuevaActividad> {
     ).then(
       (value) {
         if (value != null) {
-          setState(() {
-            fechaActividad = Timestamp.fromDate(value);
-            fechaActividadController.text =
-                DateFormat('dd/MM/yyyy').format(value);
-          });
+          setState(
+            () {
+              fechaActividad = Timestamp.fromDate(value);
+              fechaActividadController.text =
+                  DateFormat('dd/MM/yyyy').format(value);
+            },
+          );
         }
       },
     );
-  }
-
-  Future<List<PlatformFile>?> seleccionarArchivos() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-      allowMultiple: true,
-    );
-
-    if (result != null) {
-      return result.files;
-    } else {
-      return null;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nueva Actividad'),
+        title: const Text('Editar Actividad'),
         actions: [
           ElevatedButton.icon(
             onPressed: () {
-              addActividad(
-                nombreActividadController.text,
-                fechaActividad,
-                descripcionController.text,
-                int.tryParse(horasAcademicasController.text) ?? 0,
-                int.tryParse(horasSocialesController.text) ?? 0,
-                int.tryParse(horasCulturalesController.text) ?? 0,
-                int.tryParse(horasDeportivasController.text) ?? 0,
-              );
-
-              nombreActividadController.clear();
-              fechaActividadController.clear();
-              descripcionController.clear();
-              horasAcademicasController.clear();
-              horasSocialesController.clear();
-              horasCulturalesController.clear();
-              horasDeportivasController.clear();
-
-              setState(() {
-                academicoIsChecked = false;
-                socialIsChecked = false;
-                culturalIsChecked = false;
-                deportivoIsChecked = false;
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Actividad creada exitosamente!'),
-                ),
-              );
+              //AQUI SE GUARDA TODOO
+              // addActividad(
+              //   nombreActividadController.text,
+              //   fechaActividad,
+              //   descripcionController.text,
+              //   int.parse(horasAcademicasController.text),
+              //   int.parse(horasSocialesController.text),
+              //   int.parse(horasCulturalesController.text),
+              //   int.parse(horasDeportivasController.text),
+              // );
             },
-            label: const Text('Guardar'),
+            label: const Text('Modificar'),
             icon: const Icon(Icons.save),
           ),
           const SizedBox(
@@ -206,14 +211,10 @@ class _NuevaActividadState extends State<NuevaActividad> {
                 child: Column(
                   children: [
                     const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Ámbitos:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
@@ -230,9 +231,11 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 Checkbox(
                                   value: academicoIsChecked,
                                   onChanged: (value) {
-                                    setState(() {
-                                      academicoIsChecked = value!;
-                                    });
+                                    setState(
+                                      () {
+                                        academicoIsChecked = value!;
+                                      },
+                                    );
                                   },
                                 ),
                                 const Text('Científico/Académico'),
@@ -252,7 +255,6 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 enabled: academicoIsChecked,
                                 controller: horasAcademicasController,
                                 keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -273,9 +275,11 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 Checkbox(
                                   value: socialIsChecked,
                                   onChanged: (value) {
-                                    setState(() {
-                                      socialIsChecked = value!;
-                                    });
+                                    setState(
+                                      () {
+                                        socialIsChecked = value!;
+                                      },
+                                    );
                                   },
                                 ),
                                 const Text('Social'),
@@ -291,7 +295,6 @@ class _NuevaActividadState extends State<NuevaActividad> {
                               child: TextField(
                                 enabled: socialIsChecked,
                                 controller: horasSocialesController,
-                                textAlign: TextAlign.center,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -329,7 +332,6 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 enabled: culturalIsChecked,
                                 controller: horasCulturalesController,
                                 keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -366,7 +368,6 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 enabled: deportivoIsChecked,
                                 controller: horasDeportivasController,
                                 keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -381,57 +382,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size.fromHeight(50)),
-                    onPressed: () async {
-                      final seleccion = await seleccionarArchivos();
-                      if (seleccion != null) {
-                        setState(() {
-                          archivos.addAll(seleccion);
-                        });
-                      }
-                    },
-                    label: const Text('Subir archivo'),
-                    icon: const Icon(Icons.file_upload),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              archivos.isNotEmpty
-                  ? Column(
-                      children: archivos.map((archivo) {
-                        return ListTile(
-                          leading: const Icon(Icons.picture_as_pdf),
-                          title: Text(archivo.name),
-                          trailing: PopupMenuButton(
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                onTap: () {},
-                                child: const Text('Vista previa'),
-                              ),
-                              PopupMenuItem(
-                                onTap: () {
-                                  setState(() {
-                                    archivos.remove(archivo);
-                                  });
-                                },
-                                child: const Text('Eliminar'),
-                              )
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    )
-                  : const Text('No se ha seleccionado ningún archivo'),
+              )
             ],
           ),
         ),
