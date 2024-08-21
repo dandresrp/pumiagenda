@@ -27,7 +27,10 @@ class PantallaAcercade extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 8),
+            const Text('Repositorio:',
+              style: TextStyle(fontSize: 18),),
             GestureDetector(
+              
               onTap: () => _launchURL(githubUrl),
               child: Text(
                 githubUrl,
@@ -47,9 +50,9 @@ class PantallaAcercade extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildDeveloperCard('Foto Kaela'),
-                _buildDeveloperCard('Foto Diego'),
-                _buildDeveloperCard('Foto Roberto'),
+              _buildDeveloperCard('images/Kaela.jpg', 'Kaela'),
+                _buildDeveloperCard('images/Diego.jpg', 'Diego'),
+                _buildDeveloperCard('images/Roberto.jpg', 'Roberto'),
               ],
             ),
           ],
@@ -58,22 +61,21 @@ class PantallaAcercade extends StatelessWidget {
     );
   }
 
-  Widget _buildDeveloperCard(String name) {
+ Widget _buildDeveloperCard(String imagePath, String name) {
     return Column(
       children: [
-        Container(
-          width: 80,
-          height: 80,
-          color: Colors.grey[300],
-          child: Center(
-            child: Text(
-              name,
-              textAlign: TextAlign.center,
-            ),
+        // Mostrar la imagen en un círculo
+        ClipOval(
+          child: Image.asset(
+            imagePath,
+            width: 90,
+            height: 90,
+            fit: BoxFit.cover,
           ),
         ),
         const SizedBox(height: 8),
-        Text(name.split(' ')[1]),
+        // Mostrar el nombre debajo de la imagen
+        Text(name),
       ],
     );
   }
@@ -84,7 +86,7 @@ class PantallaAcercade extends StatelessWidget {
       // ignore: deprecated_member_use
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      throw 'NO SE PUDO INICIAR $url';
     }
   }
 }
