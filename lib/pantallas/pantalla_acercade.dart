@@ -5,7 +5,6 @@ class PantallaAcercade extends StatelessWidget {
   const PantallaAcercade({super.key});
   final String githubUrl = 'https://github.com/dandresrp/pumiagenda';
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +26,11 @@ class PantallaAcercade extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 8),
-            const Text('Repositorio:',
-              style: TextStyle(fontSize: 18),),
+            const Text(
+              'Repositorio:',
+              style: TextStyle(fontSize: 18),
+            ),
             GestureDetector(
-              
               onTap: () => _launchURL(githubUrl),
               child: Text(
                 githubUrl,
@@ -48,11 +48,25 @@ class PantallaAcercade extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              _buildDeveloperCard('images/Kaela.jpg', 'Kaela'),
-                _buildDeveloperCard('images/Diego.jpg', 'Diego'),
-                _buildDeveloperCard('images/Roberto.jpg', 'Roberto'),
+                Expanded(
+                  child: _buildDeveloperCard(
+                    'assets/images/Kaela.jpg',
+                    'Kaela',
+                  ),
+                ),
+                Expanded(
+                  child: _buildDeveloperCard(
+                    'assets/images/Diego.jpg',
+                    'Diego',
+                  ),
+                ),
+                Expanded(
+                  child: _buildDeveloperCard(
+                    'assets/images/Roberto.jpg',
+                    'Roberto',
+                  ),
+                ),
               ],
             ),
           ],
@@ -61,17 +75,15 @@ class PantallaAcercade extends StatelessWidget {
     );
   }
 
- Widget _buildDeveloperCard(String imagePath, String name) {
+  Widget _buildDeveloperCard(String imagePath, String name) {
     return Column(
       children: [
         // Mostrar la imagen en un círculo
-        ClipOval(
-          child: Image.asset(
-            imagePath,
-            width: 90,
-            height: 90,
-            fit: BoxFit.cover,
-          ),
+        Image.asset(
+          imagePath,
+          width: 30,
+          height: 30,
+          fit: BoxFit.cover,
         ),
         const SizedBox(height: 8),
         // Mostrar el nombre debajo de la imagen
@@ -81,10 +93,9 @@ class PantallaAcercade extends StatelessWidget {
   }
 
   void _launchURL(String url) async {
-    // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       throw 'NO SE PUDO INICIAR $url';
     }
