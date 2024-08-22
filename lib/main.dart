@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pumiagenda/pantallas/pantalla_acercade.dart';
 import 'package:pumiagenda/pantallas/pantalla_editar_actividad.dart';
 import 'firebase_options.dart';
 import 'pantallas/pantalla_crear_actividad.dart';
@@ -77,6 +78,11 @@ GoRouter router = GoRouter(
         return PantallaEditarActividad(extrasData: extrasData);
       },
     ),
+    GoRoute(
+      path: '/acerca',
+      builder: (context, state) => const PantallaAcercade(),
+    )
+    
   ],
 );
 

@@ -36,7 +36,11 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           ListTile(
             title: const Text('Acerca de'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
+            onTap: () {
+              context.push(
+                '/acerca'
+              );
+            },
           ),
         ],
       ),
