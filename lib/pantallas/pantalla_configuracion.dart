@@ -25,21 +25,20 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
       body: ListView(
         children: [
           ListTile(
-              title: const Text('Editar perfil'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                context.push(
-                  '/editarPerfil',
-                  extra: datos,
-                );
-              }),
+            title: const Text('Editar perfil'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              context.push(
+                '/editarPerfil',
+                extra: datos,
+              );
+            },
+          ),
           ListTile(
             title: const Text('Acerca de'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              context.push(
-                '/acerca'
-              );
+              context.push('/acerca');
             },
           ),
         ],
