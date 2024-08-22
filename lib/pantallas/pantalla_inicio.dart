@@ -100,10 +100,22 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 ),
               ),
             ),
-            const CardHorasInicio(ambito: "Científico/Académico"),
-            const CardHorasInicio(ambito: "Cultural"),
-            const CardHorasInicio(ambito: "Deportivo"),
-            const CardHorasInicio(ambito: "Social"),
+            const CardHorasInicio(
+              ambito: "Científico/Académico",
+              campoHoras: "horasAcademicas",
+            ),
+            const CardHorasInicio(
+              ambito: "Cultural",
+              campoHoras: "horasCulturales",
+            ),
+            const CardHorasInicio(
+              ambito: "Deportivo",
+              campoHoras: "horasDeportivas",
+            ),
+            const CardHorasInicio(
+              ambito: "Social",
+              campoHoras: "horasSociales",
+            ),
           ],
         ),
       ),
