@@ -118,12 +118,14 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                                   .collection('actividadesvoae')
                                   .doc(docId)
                                   .delete();
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('$nombreActividad eliminada'),
-                                ),
-                              );
+
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('$nombreActividad eliminada'),
+                                  ),
+                                );
+                              }
                             },
                             child: const Text('Eliminar'),
                           ),

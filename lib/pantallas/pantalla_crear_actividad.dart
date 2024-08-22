@@ -33,6 +33,25 @@ class _NuevaActividadState extends State<NuevaActividad> {
   late Timestamp fechaActividad;
   List<PlatformFile> archivos = [];
 
+  Future<List<Reference>> subirArchivos(List<PlatformFile> archivos) async {
+    List<Reference> referencias = [];
+
+    for (var archivo in archivos) {
+      File file = File(archivo.path!);
+      String nombreArchivo = archivo.name;
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('pdfs/$nombreArchivo');
+
+      UploadTask uploadTask = storageRef.putFile(file);
+
+      await uploadTask;
+
+      referencias.add(storageRef);
+    }
+
+    return referencias;
+  }
+
   Future<void> addActividad(
     String nombreActividad,
     Timestamp fechaActividad,
@@ -41,8 +60,10 @@ class _NuevaActividadState extends State<NuevaActividad> {
     int horasSociales,
     int horasCulturales,
     int horasDeportivas,
-    // String urlArchivoPDF,
+    List<Reference> referenciasArchivosPDF,
   ) {
+    List<String> pathsArchivosPDF =
+        referenciasArchivosPDF.map((ref) => ref.fullPath).toList();
     return FirebaseFirestore.instance.collection('actividadesvoae').add({
       'nombreActividad': nombreActividad,
       'descripcion': descripcion,
@@ -53,7 +74,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
       'fechaActividad': fechaActividad,
       'fechaCreacion': Timestamp.now(),
       'fechaActualizacion': Timestamp.now(),
-      // 'archivoPDF': urlArchivoPDF,
+      'archivosPDF': pathsArchivosPDF,
     });
   }
 
@@ -97,8 +118,10 @@ class _NuevaActividadState extends State<NuevaActividad> {
         title: const Text('Nueva Actividad'),
         actions: [
           ElevatedButton.icon(
-            onPressed: () {
-              addActividad(
+            onPressed: () async {
+              List<Reference> referencias = await subirArchivos(archivos);
+
+              await addActividad(
                 nombreActividadController.text,
                 fechaActividad,
                 descripcionController.text,
@@ -106,7 +129,16 @@ class _NuevaActividadState extends State<NuevaActividad> {
                 int.tryParse(horasSocialesController.text) ?? 0,
                 int.tryParse(horasCulturalesController.text) ?? 0,
                 int.tryParse(horasDeportivasController.text) ?? 0,
+                referencias,
               );
+
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('¡Actividad creada exitosamente!'),
+                  ),
+                );
+              }
 
               nombreActividadController.clear();
               fechaActividadController.clear();
@@ -121,13 +153,8 @@ class _NuevaActividadState extends State<NuevaActividad> {
                 socialIsChecked = false;
                 culturalIsChecked = false;
                 deportivoIsChecked = false;
+                archivos.clear();
               });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Actividad creada exitosamente!'),
-                ),
-              );
             },
             label: const Text('Guardar'),
             icon: const Icon(Icons.save),
