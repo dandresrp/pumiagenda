@@ -102,30 +102,6 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     );
   }
 
-  // Future<void> addActividad(
-  //   String nombreActividad,
-  //   Timestamp fechaActividad,
-  //   String descripcion,
-  //   int horasAcademicas,
-  //   int horasSociales,
-  //   int horasCulturales,
-  //   int horasDeportivas,
-  // ) {
-  //   return FirebaseFirestore.instance.collection('actividadesvoae').add(
-  //     {
-  //       'nombreActividad': nombreActividad,
-  //       'descripcion': descripcion,
-  //       'horasAcademicas': horasAcademicas,
-  //       'horasSociales': horasSociales,
-  //       'horasCulturales': horasCulturales,
-  //       'horasDeportivas': horasDeportivas,
-  //       'fechaActividad': fechaActividad,
-  //       'fechaCreacion': Timestamp.now(),
-  //       'fechaActualizacion': Timestamp.now(),
-  //     },
-  //   );
-  // }
-
   void _showDatePicker() {
     showDatePicker(
       context: context,
@@ -156,7 +132,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
           ElevatedButton.icon(
             onPressed: () {
               updateActividad(
-                docId, // Este debe ser el ID del documento a actualizar
+                docId,
                 nombreActividadController.text,
                 fechaActividad,
                 descripcionController.text,
@@ -164,23 +140,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                 int.parse(horasSocialesController.text),
                 int.parse(horasCulturalesController.text),
                 int.parse(horasDeportivasController.text),
-              ).then((_) {
-                // Aquí puedes manejar la acción post-actualización, como mostrar un mensaje de éxito o regresar a la pantalla anterior
-                Navigator.pop(context);
-              }).catchError((error) {
-                // Manejo de errores
-                print('Error al actualizar la actividad: $error');
-              });
-
-              // updateActividad(
-              //   nombreActividadController.text,
-              //   descripcionController.text,
-              //   fechaActividad,
-              //   int.parse(horasAcademicasController.text),
-              //   int.parse(horasSocialesController.text),
-              //   int.parse(horasCulturalesController.text),
-              //   int.parse(horasDeportivasController.text),
-              // );
+              );
             },
             label: const Text('Modificar'),
             icon: const Icon(Icons.save),

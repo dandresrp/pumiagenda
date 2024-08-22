@@ -11,9 +11,35 @@ class PantallaAmbito extends StatefulWidget {
 }
 
 class _PantallaAmbitoState extends State<PantallaAmbito> {
+  //filtra actividades según el ámbito
   Stream<QuerySnapshot> getActividades() {
-    final actividadesStream =
-        FirebaseFirestore.instance.collection('actividadesvoae').snapshots();
+    String ambito = widget.extrasData;
+
+    // Determinar el campo de horas en función del ámbito
+    String campoHoras;
+    switch (ambito) {
+      case "Científico/Academico":
+        campoHoras = 'horasAcademicas';
+        break;
+      case "Cultural":
+        campoHoras = 'horasCulturales';
+        break;
+      case "Deportivo":
+        campoHoras = 'horasDeportivas';
+        break;
+      case "Social":
+        campoHoras = 'horasSociales';
+        break;
+      default:
+        campoHoras = '';
+    }
+
+    //filtro en función del campo de horas
+    final actividadesStream = FirebaseFirestore.instance
+        .collection('actividadesvoae')
+        .where(campoHoras, isGreaterThan: 0)
+        .snapshots();
+
     return actividadesStream;
   }
 
@@ -43,7 +69,7 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                 // Obtener cada documento
                 DocumentSnapshot document = listaActividades[index];
 
-                //Obtener Id del documento (para eliminar)
+                // Obtener Id del documento (para eliminar)
                 String docId = document.id;
 
                 // Obtener la actividad de cada documento
@@ -52,7 +78,7 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                 String nombreActividad = data['nombreActividad'];
                 Timestamp fechaActividad = data['fechaActividad'];
 
-                //Convertir fecha a String
+                // Convertir fecha a String
                 Timestamp timestamp = fechaActividad;
                 DateTime dateTime = timestamp.toDate();
                 String formattedDate =
