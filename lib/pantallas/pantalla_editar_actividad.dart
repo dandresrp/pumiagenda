@@ -11,9 +11,13 @@ class PantallaEditarActividad extends StatefulWidget {
 }
 
 class _NuevaActividadState extends State<PantallaEditarActividad> {
+  late String docId;
+
   @override
   void initState() {
     super.initState();
+    docId = widget.extrasData['documentId'];
+
     if (widget.extrasData['horasSociales'] > 0) {
       socialIsChecked = true;
     }
@@ -70,7 +74,9 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
   bool deportivoIsChecked = false;
   late Timestamp fechaActividad;
 
-  Future<void> addActividad(
+  //nuevo future editado
+  Future<void> updateActividad(
+    String docId,
     String nombreActividad,
     Timestamp fechaActividad,
     String descripcion,
@@ -79,7 +85,10 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     int horasCulturales,
     int horasDeportivas,
   ) {
-    return FirebaseFirestore.instance.collection('actividadesvoae').add(
+    return FirebaseFirestore.instance
+        .collection('actividadesvoae')
+        .doc(docId)
+        .update(
       {
         'nombreActividad': nombreActividad,
         'descripcion': descripcion,
@@ -88,11 +97,34 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         'horasCulturales': horasCulturales,
         'horasDeportivas': horasDeportivas,
         'fechaActividad': fechaActividad,
-        'fechaCreacion': Timestamp.now(),
         'fechaActualizacion': Timestamp.now(),
       },
     );
   }
+
+  // Future<void> addActividad(
+  //   String nombreActividad,
+  //   Timestamp fechaActividad,
+  //   String descripcion,
+  //   int horasAcademicas,
+  //   int horasSociales,
+  //   int horasCulturales,
+  //   int horasDeportivas,
+  // ) {
+  //   return FirebaseFirestore.instance.collection('actividadesvoae').add(
+  //     {
+  //       'nombreActividad': nombreActividad,
+  //       'descripcion': descripcion,
+  //       'horasAcademicas': horasAcademicas,
+  //       'horasSociales': horasSociales,
+  //       'horasCulturales': horasCulturales,
+  //       'horasDeportivas': horasDeportivas,
+  //       'fechaActividad': fechaActividad,
+  //       'fechaCreacion': Timestamp.now(),
+  //       'fechaActualizacion': Timestamp.now(),
+  //     },
+  //   );
+  // }
 
   void _showDatePicker() {
     showDatePicker(
@@ -123,11 +155,27 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         actions: [
           ElevatedButton.icon(
             onPressed: () {
-              //AQUI SE GUARDA TODOO
-              // addActividad(
+              updateActividad(
+                docId, // Este debe ser el ID del documento a actualizar
+                nombreActividadController.text,
+                fechaActividad,
+                descripcionController.text,
+                int.parse(horasAcademicasController.text),
+                int.parse(horasSocialesController.text),
+                int.parse(horasCulturalesController.text),
+                int.parse(horasDeportivasController.text),
+              ).then((_) {
+                // Aquí puedes manejar la acción post-actualización, como mostrar un mensaje de éxito o regresar a la pantalla anterior
+                Navigator.pop(context);
+              }).catchError((error) {
+                // Manejo de errores
+                print('Error al actualizar la actividad: $error');
+              });
+
+              // updateActividad(
               //   nombreActividadController.text,
-              //   fechaActividad,
               //   descripcionController.text,
+              //   fechaActividad,
               //   int.parse(horasAcademicasController.text),
               //   int.parse(horasSocialesController.text),
               //   int.parse(horasCulturalesController.text),

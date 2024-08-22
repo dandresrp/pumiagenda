@@ -80,7 +80,7 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                             onTap: () {
                               context.push(
                                 '/editarActividad',
-                                extra: data,
+                                extra: {'documentId': docId, ...data},
                               );
                             },
                             child: const Text('Editar'),
