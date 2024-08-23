@@ -112,7 +112,14 @@ class _MyAppState extends State<MyApp> {
         GoRoute(
           path: '/acerca',
           builder: (context, state) => const PantallaAcercade(),
-        )
+        ),
+        GoRoute(
+          path: '/vistaPrevia',
+          builder: (context, state) {
+            final String pdfPath = state.extra as String;
+            return PantallaVistaPrevia(pdfPath: pdfPath);
+          },
+        ),
       ],
     );
   }
