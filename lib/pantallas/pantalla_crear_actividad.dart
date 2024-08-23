@@ -13,6 +13,7 @@ class NuevaActividad extends StatefulWidget {
 }
 
 class _NuevaActividadState extends State<NuevaActividad> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController nombreActividadController =
       TextEditingController();
   final TextEditingController fechaActividadController =
@@ -30,7 +31,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
   bool socialIsChecked = false;
   bool culturalIsChecked = false;
   bool deportivoIsChecked = false;
-  late Timestamp fechaActividad;
+  Timestamp? fechaActividad;
   List<PlatformFile> archivos = [];
 
   Future<List<Reference>> subirArchivos(List<PlatformFile> archivos) async {
@@ -54,12 +55,12 @@ class _NuevaActividadState extends State<NuevaActividad> {
 
   Future<void> addActividad(
     String nombreActividad,
-    Timestamp fechaActividad,
-    String descripcion,
-    int horasAcademicas,
-    int horasSociales,
-    int horasCulturales,
-    int horasDeportivas,
+    Timestamp? fechaActividad,
+    String? descripcion,
+    int? horasAcademicas,
+    int? horasSociales,
+    int? horasCulturales,
+    int? horasDeportivas,
     List<Reference> referenciasArchivosPDF,
   ) {
     List<String> pathsArchivosPDF =
@@ -119,42 +120,46 @@ class _NuevaActividadState extends State<NuevaActividad> {
         actions: [
           ElevatedButton.icon(
             onPressed: () async {
-              List<Reference> referencias = await subirArchivos(archivos);
+              if (_formKey.currentState!.validate()) {
+                List<Reference> referencias = await subirArchivos(archivos);
 
-              await addActividad(
-                nombreActividadController.text,
-                fechaActividad,
-                descripcionController.text,
-                int.tryParse(horasAcademicasController.text) ?? 0,
-                int.tryParse(horasSocialesController.text) ?? 0,
-                int.tryParse(horasCulturalesController.text) ?? 0,
-                int.tryParse(horasDeportivasController.text) ?? 0,
-                referencias,
-              );
-
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('¡Actividad creada exitosamente!'),
-                  ),
+                await addActividad(
+                  nombreActividadController.text,
+                  fechaActividad,
+                  descripcionController.text,
+                  int.tryParse(horasAcademicasController.text) ?? 0,
+                  int.tryParse(horasSocialesController.text) ?? 0,
+                  int.tryParse(horasCulturalesController.text) ?? 0,
+                  int.tryParse(horasDeportivasController.text) ?? 0,
+                  referencias,
                 );
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('¡Actividad creada exitosamente!'),
+                    ),
+                  );
+                }
+
+                nombreActividadController.clear();
+                fechaActividadController.clear();
+                descripcionController.clear();
+                horasAcademicasController.clear();
+                horasSocialesController.clear();
+                horasCulturalesController.clear();
+                horasDeportivasController.clear();
+
+                setState(() {
+                  academicoIsChecked = false;
+                  socialIsChecked = false;
+                  culturalIsChecked = false;
+                  deportivoIsChecked = false;
+                  archivos.clear();
+                });
+              } else {
+                return;
               }
-
-              nombreActividadController.clear();
-              fechaActividadController.clear();
-              descripcionController.clear();
-              horasAcademicasController.clear();
-              horasSocialesController.clear();
-              horasCulturalesController.clear();
-              horasDeportivasController.clear();
-
-              setState(() {
-                academicoIsChecked = false;
-                socialIsChecked = false;
-                culturalIsChecked = false;
-                deportivoIsChecked = false;
-                archivos.clear();
-              });
             },
             label: const Text('Guardar'),
             icon: const Icon(Icons.save),
@@ -167,299 +172,308 @@ class _NuevaActividadState extends State<NuevaActividad> {
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: nombreActividadController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  label: const Text("Nombre"),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: fechaActividadController,
-                      enabled: false,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                TextFormField(
+                  controller: nombreActividadController,
+                  autofocus: true,
+                  validator: (value) =>
+                      value!.isEmpty ? 'El nombre no puede estar vacio' : null,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    label: const Text("Nombre"),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: fechaActividadController,
+                        validator: (value) => value!.isEmpty
+                            ? 'La fecha no puede estar vacia'
+                            : null,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          label: const Text("Fecha de la actividad"),
                         ),
-                        label: const Text("Fecha de la actividad"),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: _showDatePicker,
-                    label: const Text('Elegir fecha'),
-                    icon: const Icon(Icons.date_range),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: descripcionController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  label: const Text("Descripción"),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.grey.shade500),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Ámbitos:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        )
-                      ],
-                    ),
                     const SizedBox(
-                      height: 10,
+                      width: 10,
                     ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: academicoIsChecked,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      academicoIsChecked = value!;
-                                    });
-                                  },
-                                ),
-                                const Text('Científico/Académico'),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
+                    ElevatedButton.icon(
+                      onPressed: _showDatePicker,
+                      label: const Text('Elegir fecha'),
+                      icon: const Icon(Icons.date_range),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: descripcionController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    label: const Text("Descripción"),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey.shade500),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Ámbitos:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
-                            const SizedBox(
-                              width: 40,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: academicoIsChecked,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        academicoIsChecked = value!;
+                                      });
+                                    },
+                                  ),
+                                  const Text('Científico/Académico'),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
                               ),
-                              child: TextField(
-                                enabled: academicoIsChecked,
-                                controller: horasAcademicasController,
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
+                              const SizedBox(
+                                width: 40,
+                              ),
+                              Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 50,
+                                ),
+                                child: TextField(
+                                  enabled: academicoIsChecked,
+                                  controller: horasAcademicasController,
+                                  keyboardType: TextInputType.number,
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      hintText: '0'),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: socialIsChecked,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        socialIsChecked = value!;
+                                      });
+                                    },
+                                  ),
+                                  const Text('Social'),
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 150,
+                              ),
+                              Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 50,
+                                ),
+                                child: TextField(
+                                  enabled: socialIsChecked,
+                                  controller: horasSocialesController,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    hintText: '0'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: socialIsChecked,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      socialIsChecked = value!;
-                                    });
-                                  },
-                                ),
-                                const Text('Social'),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 150,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: socialIsChecked,
-                                controller: horasSocialesController,
-                                textAlign: TextAlign.center,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    hintText: '0',
                                   ),
-                                  hintText: '0',
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                              value: culturalIsChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  culturalIsChecked = value!;
-                                });
-                              },
-                            ),
-                            const Text('Cultural'),
-                            const SizedBox(
-                              width: 140,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: culturalIsChecked,
-                                controller: horasCulturalesController,
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  hintText: '0',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                              value: deportivoIsChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  deportivoIsChecked = value!;
-                                });
-                              },
-                            ),
-                            const Text('Deportivo'),
-                            const SizedBox(
-                              width: 128,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: deportivoIsChecked,
-                                controller: horasDeportivasController,
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  hintText: '0',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size.fromHeight(50)),
-                    onPressed: () async {
-                      final seleccion = await seleccionarArchivos();
-                      if (seleccion != null) {
-                        setState(() {
-                          archivos.addAll(seleccion);
-                        });
-                      }
-                    },
-                    label: const Text('Subir archivo'),
-                    icon: const Icon(Icons.file_upload),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              archivos.isNotEmpty
-                  ? Column(
-                      children: archivos.map((archivo) {
-                        return ListTile(
-                          leading: const Icon(Icons.picture_as_pdf),
-                          title: Text(archivo.name),
-                          trailing: PopupMenuButton(
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                onTap: () {},
-                                child: const Text('Vista previa'),
-                              ),
-                              PopupMenuItem(
-                                onTap: () {
-                                  setState(() {
-                                    archivos.remove(archivo);
-                                  });
-                                },
-                                child: const Text('Eliminar'),
-                              )
                             ],
                           ),
-                        );
-                      }).toList(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: culturalIsChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    culturalIsChecked = value!;
+                                  });
+                                },
+                              ),
+                              const Text('Cultural'),
+                              const SizedBox(
+                                width: 140,
+                              ),
+                              Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 50,
+                                ),
+                                child: TextField(
+                                  enabled: culturalIsChecked,
+                                  controller: horasCulturalesController,
+                                  keyboardType: TextInputType.number,
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    hintText: '0',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: deportivoIsChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    deportivoIsChecked = value!;
+                                  });
+                                },
+                              ),
+                              const Text('Deportivo'),
+                              const SizedBox(
+                                width: 128,
+                              ),
+                              Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 50,
+                                ),
+                                child: TextField(
+                                  enabled: deportivoIsChecked,
+                                  controller: horasDeportivasController,
+                                  keyboardType: TextInputType.number,
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    hintText: '0',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          fixedSize: const Size.fromHeight(50)),
+                      onPressed: () async {
+                        final seleccion = await seleccionarArchivos();
+                        if (seleccion != null) {
+                          setState(() {
+                            archivos.addAll(seleccion);
+                          });
+                        }
+                      },
+                      label: const Text('Subir archivo'),
+                      icon: const Icon(Icons.file_upload),
                     )
-                  : const Text('No se ha seleccionado ningún archivo'),
-            ],
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                archivos.isNotEmpty
+                    ? Column(
+                        children: archivos.map((archivo) {
+                          return ListTile(
+                            leading: const Icon(Icons.picture_as_pdf),
+                            title: Text(archivo.name),
+                            trailing: PopupMenuButton(
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  onTap: () {},
+                                  child: const Text('Vista previa'),
+                                ),
+                                PopupMenuItem(
+                                  onTap: () {
+                                    setState(() {
+                                      archivos.remove(archivo);
+                                    });
+                                  },
+                                  child: const Text('Eliminar'),
+                                )
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    : const Text('No se ha seleccionado ningún archivo'),
+              ],
+            ),
           ),
         ),
       ),
