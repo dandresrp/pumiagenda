@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PantallaRegistro extends StatefulWidget {
@@ -16,15 +15,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
   final _correoController = TextEditingController();
   final _cuentaController = TextEditingController();
   final _carreraController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nombreController.dispose();
-    _correoController.dispose();
-    _cuentaController.dispose();
-    _carreraController.dispose();
-    super.dispose();
-  }
+  String avatar = 'person';
 
   String? _validateNombre(String? value) {
     if (value == null || value.isEmpty) {
@@ -68,98 +59,202 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
     }
     return null;
   }
- 
-Future<void> _submit() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        // Crear un documento en Firestore con los datos ingresados
-        await FirebaseFirestore.instance.collection('perfiles').add({
-          'nombre': _nombreController.text,
-          'correo': _correoController.text,
-          'cuenta': _cuentaController.text,
-          'carrera': _carreraController.text,
-        });
 
-        // Redireccionar después de guardar los datos
-        // ignore: use_build_context_synchronously
-        context.go('/');
-
-      } catch (e) {
-        // Mostrar mensaje de error si algo falla
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al registrar: $e')),
-        );
-      }
-    }
+  Future<void> addPerfil(
+    String nombre,
+    String correo,
+    int cuenta,
+    String carrera,
+    String avatar,
+  ) {
+    return FirebaseFirestore.instance.collection('perfiles').add(
+      {
+        'nombre': nombre,
+        'correo': correo,
+        'cuenta': cuenta,
+        'carrera': carrera,
+        'avatar': avatar,
+      },
+    );
   }
 
-   
+  Icon _getIconByName(String avatar) {
+    switch (avatar) {
+      case 'person':
+        return const Icon(Icons.person);
+      case 'business':
+        return const Icon(Icons.school);
+      case 'healing_outlined':
+        return const Icon(Icons.healing_outlined);
+      case 'engineering':
+        return const Icon(Icons.engineering);
+      default:
+        return const Icon(Icons.person);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PumIAgenda'),
+        title: const Center(child: Text('PumiAgenda')),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const CircleAvatar(
-                  radius: 50,
-                  child: Text(
-                    'Avatar',
-                    style: TextStyle(fontSize: 20),
+        padding: const EdgeInsets.symmetric(
+          vertical: 60,
+          horizontal: 20,
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 70,
+                child: IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Center(
+                            child: Text('Seleccione un avatar'),
+                          ),
+                          content: SizedBox(
+                            width: double.maxFinite,
+                            child: GridView.count(
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      avatar = 'person';
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.person, size: 50),
+                                      Text('Usuario'),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      avatar = 'business';
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.school, size: 50),
+                                      Text('Licenciatura'),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      avatar = 'healing_outlined';
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.healing_outlined, size: 50),
+                                      Text('Salud'),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      avatar = 'engineering';
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.engineering, size: 50),
+                                      Text('Ingeniería'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  icon: _getIconByName(avatar),
+                  iconSize: 100,
+                ),
+              ),
+              const SizedBox(height: 50),
+              TextFormField(
+                controller: _nombreController,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre',
+                  border: OutlineInputBorder(),
+                ),
+                validator: _validateNombre,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _correoController,
+                decoration: const InputDecoration(
+                  labelText: 'Correo Institucional',
+                  border: OutlineInputBorder(),
+                ),
+                validator: _validateCorreo,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _cuentaController,
+                decoration: const InputDecoration(
+                  labelText: 'Cuenta',
+                  border: OutlineInputBorder(),
+                ),
+                validator: _validateCuenta,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _carreraController,
+                decoration: const InputDecoration(
+                  labelText: 'Carrera',
+                  border: OutlineInputBorder(),
+                ),
+                validator: _validateCarrera,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    addPerfil(
+                      _nombreController.text,
+                      _correoController.text,
+                      int.parse(_cuentaController.text),
+                      _carreraController.text,
+                      avatar,
+                    );
+                  } else {
+                    return;
+                  }
+                },
+                child: const Text(
+                  'Registrar',
+                  style: TextStyle(
+                    fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _nombreController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: _validateNombre,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _correoController,
-                  decoration: const InputDecoration(
-                    labelText: 'Correo Institucional',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: _validateCorreo,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _cuentaController,
-                  decoration: const InputDecoration(
-                    labelText: 'N. Cuenta',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: _validateCuenta,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _carreraController,
-                  decoration: const InputDecoration(
-                    labelText: 'Carrera',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: _validateCarrera,
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: _submit,
-                  child: const Text('Registrar'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

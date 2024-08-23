@@ -288,7 +288,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 constraints: const BoxConstraints(
                                   maxWidth: 50,
                                 ),
-                                child: TextField(
+                                child: TextFormField(
                                   enabled: academicoIsChecked,
                                   controller: horasAcademicasController,
                                   keyboardType: TextInputType.number,
@@ -328,7 +328,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 constraints: const BoxConstraints(
                                   maxWidth: 50,
                                 ),
-                                child: TextField(
+                                child: TextFormField(
                                   enabled: socialIsChecked,
                                   controller: horasSocialesController,
                                   textAlign: TextAlign.center,
@@ -365,7 +365,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 constraints: const BoxConstraints(
                                   maxWidth: 50,
                                 ),
-                                child: TextField(
+                                child: TextFormField(
                                   enabled: culturalIsChecked,
                                   controller: horasCulturalesController,
                                   keyboardType: TextInputType.number,
@@ -402,7 +402,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                                 constraints: const BoxConstraints(
                                   maxWidth: 50,
                                 ),
-                                child: TextField(
+                                child: TextFormField(
                                   enabled: deportivoIsChecked,
                                   controller: horasDeportivasController,
                                   keyboardType: TextInputType.number,

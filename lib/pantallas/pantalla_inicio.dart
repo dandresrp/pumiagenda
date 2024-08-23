@@ -12,6 +12,8 @@ class PantallaInicio extends StatefulWidget {
 }
 
 class _PantallaInicioState extends State<PantallaInicio> {
+  Map<String, dynamic>? perfilEditar;
+
   Future<DocumentSnapshot<Map<String, dynamic>>> getPerfil(perfilId) async {
     return await FirebaseFirestore.instance
         .collection('perfiles')
@@ -59,6 +61,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                               } else if (snapshot.hasData) {
                                 Map<String, dynamic>? perfil =
                                     snapshot.data!.data();
+                                perfilEditar = perfil;
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,9 +96,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
-                            context.push(
-                              '/editarPerfil',
-                            );
+                            context.push('/editarPerfil', extra: perfilEditar);
                           }),
                     ],
                   ),
