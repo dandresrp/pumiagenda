@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 
@@ -26,6 +27,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
       TextEditingController();
   final TextEditingController horasDeportivasController =
       TextEditingController();
+  String? profileDocId;
 
   bool academicoIsChecked = false;
   bool socialIsChecked = false;
@@ -33,6 +35,19 @@ class _NuevaActividadState extends State<NuevaActividad> {
   bool deportivoIsChecked = false;
   Timestamp? fechaActividad;
   List<PlatformFile> archivos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getProfileDocId();
+  }
+
+  Future<void> _getProfileDocId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      profileDocId = prefs.getString('profileDocId');
+    });
+  }
 
   Future<List<Reference>> subirArchivos(List<PlatformFile> archivos) async {
     List<Reference> referencias = [];
@@ -65,7 +80,11 @@ class _NuevaActividadState extends State<NuevaActividad> {
   ) {
     List<String> pathsArchivosPDF =
         referenciasArchivosPDF.map((ref) => ref.fullPath).toList();
-    return FirebaseFirestore.instance.collection('actividadesvoae').add({
+    return FirebaseFirestore.instance
+        .collection('perfiles')
+        .doc(profileDocId)
+        .collection('actividadesvoae')
+        .add({
       'nombreActividad': nombreActividad,
       'descripcion': descripcion,
       'horasAcademicas': horasAcademicas,

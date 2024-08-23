@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BarraInferior extends StatefulWidget {
   final int currentIndex;
@@ -74,10 +75,28 @@ class CardHorasInicio extends StatefulWidget {
 }
 
 class _CardHorasInicioState extends State<CardHorasInicio> {
+  String? profileDocId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProfileDocId();
+  }
+
+  Future<void> _getProfileDocId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      profileDocId = prefs.getString('profileDocId');
+    });
+  }
+
   Future<int> getHorasTotales(String campoHoras) async {
     final firestore = FirebaseFirestore.instance;
-    final QuerySnapshot snapshot =
-        await firestore.collection('actividadesvoae').get();
+    final QuerySnapshot snapshot = await firestore
+        .collection('perfiles')
+        .doc(profileDocId)
+        .collection('actividadesvoae')
+        .get();
 
     int horasTotales = 0;
 
