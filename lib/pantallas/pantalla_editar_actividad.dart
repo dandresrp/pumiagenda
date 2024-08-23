@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 
 class PantallaEditarActividad extends StatefulWidget {
@@ -12,6 +15,9 @@ class PantallaEditarActividad extends StatefulWidget {
 
 class _NuevaActividadState extends State<PantallaEditarActividad> {
   late String docId;
+
+  List<String> currentPDFPaths = [];
+  List<PlatformFile> newPDFs = [];
 
   @override
   void initState() {
@@ -31,7 +37,14 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
       academicoIsChecked = true;
     }
 
-    //Recolecta informacion de la actividad
+    // Verifica si hay un pdf
+    if (widget.extrasData['archivosPDF'] != null) {
+      currentPDFPaths = List<String>.from(widget.extrasData['archivosPDF']);
+    } else {
+      currentPDFPaths = []; // lista vacia por si es null
+    }
+
+    //Saca la info de la actividad
     nombreActividadController.text = widget.extrasData['nombreActividad'];
     descripcionController.text = widget.extrasData['descripcion'];
     DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
@@ -84,6 +97,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     int horasSociales,
     int horasCulturales,
     int horasDeportivas,
+    List<String> referenciasArchivosPDF,
   ) {
     return FirebaseFirestore.instance
         .collection('actividadesvoae')
@@ -98,8 +112,28 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         'horasDeportivas': horasDeportivas,
         'fechaActividad': fechaActividad,
         'fechaActualizacion': Timestamp.now(),
+        'archivosPDF': referenciasArchivosPDF,
       },
     );
+  }
+
+  Future<List<String>> uploadNewPDFs(List<PlatformFile> archivos) async {
+    List<String> nuevasReferencias =
+        []; //la listpara almacenar los paths de los nuevos PDF
+
+    for (var archivo in archivos) {
+      File file = File(archivo.path!);
+      String nombreArchivo = archivo.name;
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('pdfs/$nombreArchivo');
+
+      UploadTask uploadTask = storageRef.putFile(file);
+      await uploadTask;
+
+      nuevasReferencias.add(storageRef.fullPath);
+    }
+
+    return nuevasReferencias;
   }
 
   void _showDatePicker() {
@@ -123,6 +157,20 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     );
   }
 
+  Future<List<PlatformFile>?> seleccionarArchivos() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      allowMultiple: true,
+    );
+
+    if (result != null) {
+      return result.files;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,8 +178,15 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         title: const Text('Editar Actividad'),
         actions: [
           ElevatedButton.icon(
-            onPressed: () {
-              updateActividad(
+            onPressed: () async {
+              List<String> referencias = currentPDFPaths;
+
+              //Esto ssube nuevos archivos PDF si se seleccionaron
+              if (newPDFs.isNotEmpty) {
+                referencias = await uploadNewPDFs(newPDFs);
+              }
+
+              await updateActividad(
                 docId,
                 nombreActividadController.text,
                 fechaActividad,
@@ -140,7 +195,15 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                 int.parse(horasSocialesController.text),
                 int.parse(horasCulturalesController.text),
                 int.parse(horasDeportivasController.text),
+                referencias,
               );
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('¡Actividad modificada exitosamente!'),
+                  ),
+                );
+              }
             },
             label: const Text('Modificar'),
             icon: const Icon(Icons.save),
@@ -390,7 +453,85 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                     ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size.fromHeight(50)),
+                    onPressed: () async {
+                      final seleccion = await seleccionarArchivos();
+                      if (seleccion != null) {
+                        setState(() {
+                          newPDFs.addAll(seleccion);
+                        });
+                      }
+                    },
+                    label: const Text('Subir nuevo archivo'),
+                    icon: const Icon(Icons.file_upload),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              newPDFs.isNotEmpty
+                  ? Column(
+                      children: newPDFs.map((archivo) {
+                        return ListTile(
+                          leading: const Icon(Icons.picture_as_pdf),
+                          title: Text(archivo.name),
+                          trailing: PopupMenuButton(
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                onTap: () {},
+                                child: const Text('Vista previa'),
+                              ),
+                              PopupMenuItem(
+                                onTap: () {
+                                  setState(() {
+                                    newPDFs.remove(archivo);
+                                  });
+                                },
+                                child: const Text('Eliminar'),
+                              )
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  : const Text('No se ha seleccionado ningún archivo nuevo'),
+              const SizedBox(height: 10),
+              const Text(
+                'Archivos PDF actuales:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              currentPDFPaths.isEmpty
+                  ? const Text(
+                      'No hay archivos PDF asociados a esta actividad.')
+                  : Column(
+                      children: currentPDFPaths.map((path) {
+                        return ListTile(
+                          leading: const Icon(Icons.picture_as_pdf),
+                          title: Text(path),
+                          trailing: PopupMenuButton(
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                onTap: () {},
+                                child: const Text('Vista previa'),
+                              ),
+                              PopupMenuItem(
+                                onTap: () {
+                                  setState(() {
+                                    currentPDFPaths.remove(path);
+                                  });
+                                },
+                                child: const Text('Eliminar'),
+                              )
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
             ],
           ),
         ),
