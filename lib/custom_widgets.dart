@@ -89,9 +89,23 @@ class _CardHorasInicioState extends State<CardHorasInicio> {
     return horasTotales;
   }
 
+  Color _colorSegunValor(int? value) {
+    if (value == null) return Colors.black;
+
+    if (value >= 0 && value <= 4) {
+      return Colors.red;
+    } else if (value >= 5 && value <= 9) {
+      return Colors.amber;
+    } else if (value >= 10 && value <= 14) {
+      return Colors.blue;
+    } else {
+      return Colors.green;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<int>(
       future: getHorasTotales(widget.campoHoras),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -132,9 +146,9 @@ class _CardHorasInicioState extends State<CardHorasInicio> {
                     ),
                     Text(
                       '${snapshot.data}/15',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Colors.blueAccent,
+                        color: _colorSegunValor(snapshot.data),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -156,53 +170,6 @@ class _CardHorasInicioState extends State<CardHorasInicio> {
         }
       },
     );
-
-    /* return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 40.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Horas Ámbito ${widget.ambito}',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            FutureBuilder(
-              future: obtenerHorasTotales(widget.campoHoras),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: LinearProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData) {
-                  return Text(
-                    '${snapshot.data}/15',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueAccent,
-                    ),
-                  );
-                } else {
-                  return const Text(
-                    '0/15',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueAccent,
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    ); */
   }
 }
 
