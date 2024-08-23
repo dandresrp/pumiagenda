@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PantallaAcercade extends StatelessWidget {
   const PantallaAcercade({super.key});
@@ -31,13 +30,11 @@ class PantallaAcercade extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             GestureDetector(
-              onTap: () => _launchURL(githubUrl),
               child: Text(
                 githubUrl,
                 style: const TextStyle(
                   fontSize: 18,
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
+                  color: Color.fromARGB(255, 3, 4, 4),
                 ),
               ),
             ),
@@ -78,11 +75,10 @@ class PantallaAcercade extends StatelessWidget {
   Widget _buildDeveloperCard(String imagePath, String name) {
     return Column(
       children: [
-        // Mostrar la imagen en un círculo
         Image.asset(
           imagePath,
-          width: 30,
-          height: 30,
+          width: 60,
+          height: 60,
           fit: BoxFit.cover,
         ),
         const SizedBox(height: 8),
@@ -90,14 +86,5 @@ class PantallaAcercade extends StatelessWidget {
         Text(name),
       ],
     );
-  }
-
-  void _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'NO SE PUDO INICIAR $url';
-    }
   }
 }

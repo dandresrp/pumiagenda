@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PantallaRegistro extends StatefulWidget {
   const PantallaRegistro({super.key});
@@ -67,12 +68,32 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
     }
     return null;
   }
-
-  void _submit() {
+ 
+Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      context.go('/'); 
+      try {
+        // Crear un documento en Firestore con los datos ingresados
+        await FirebaseFirestore.instance.collection('perfiles').add({
+          'nombre': _nombreController.text,
+          'correo': _correoController.text,
+          'cuenta': _cuentaController.text,
+          'carrera': _carreraController.text,
+        });
+
+        // Redireccionar después de guardar los datos
+        // ignore: use_build_context_synchronously
+        context.go('/');
+
+      } catch (e) {
+        // Mostrar mensaje de error si algo falla
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al registrar: $e')),
+        );
+      }
     }
   }
+
    
 
   @override
@@ -135,7 +156,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: _submit,
-                  child: const Text('Ingresar'),
+                  child: const Text('Registrar'),
                 ),
               ],
             ),
