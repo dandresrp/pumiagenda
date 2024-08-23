@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class PantallaEditarActividad extends StatefulWidget {
@@ -516,8 +517,11 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                           trailing: PopupMenuButton(
                             itemBuilder: (context) => [
                               PopupMenuItem(
-                                onTap: () {},
-                                child: const Text('Vista previa'),
+                                onTap: () {
+                                  final String pdfPath = path;
+                                  context.push('/vistaPrevia', extra: pdfPath);
+                                },
+                                child: const Text('Vista Previa'),
                               ),
                               PopupMenuItem(
                                 onTap: () {

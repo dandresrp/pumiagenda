@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pumiagenda/pantallas/pantalla_acercade.dart';
 import 'package:pumiagenda/pantallas/pantalla_editar_actividad.dart';
+import 'package:pumiagenda/pantallas/pantalla_vista_previa.dart';
 import 'firebase_options.dart';
 import 'pantallas/pantalla_crear_actividad.dart';
 import 'package:pumiagenda/pantallas/pantalla_navegacion.dart';
@@ -81,8 +82,14 @@ GoRouter router = GoRouter(
     GoRoute(
       path: '/acerca',
       builder: (context, state) => const PantallaAcercade(),
-    )
-    
+    ),
+    GoRoute(
+      path: '/vistaPrevia',
+      builder: (context, state) {
+        final String pdfPath = state.extra as String;
+        return PantallaVistaPrevia(pdfPath: pdfPath);
+      },
+    ),
   ],
 );
 
