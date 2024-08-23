@@ -247,6 +247,7 @@ class _NuevaActividadState extends State<NuevaActividad> {
                     const SizedBox(
                       height: 10,
                     ),
+                    ////////////Check
                     Column(
                       children: [
                         Row(

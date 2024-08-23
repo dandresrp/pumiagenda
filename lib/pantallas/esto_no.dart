@@ -10,41 +10,30 @@ class PantallaEditarActividad extends StatefulWidget {
   const PantallaEditarActividad({super.key, required this.extrasData});
 
   @override
-  State<PantallaEditarActividad> createState() => _NuevaActividadState();
+  State<PantallaEditarActividad> createState() =>
+      _PantallaEditarActividadState();
 }
 
-class _NuevaActividadState extends State<PantallaEditarActividad> {
+class _PantallaEditarActividadState extends State<PantallaEditarActividad> {
   late String docId;
-
-  List<String> currentPDFPaths = [];
-  List<PlatformFile> newPDFs = [];
+  List<String> currentPDFPaths =
+      []; // CAMBIO: Lista para almacenar los paths actuales de los PDF
+  List<PlatformFile> newPDFs =
+      []; // CAMBIO: Lista para almacenar los nuevos PDF seleccionados
 
   @override
   void initState() {
     super.initState();
     docId = widget.extrasData['documentId'];
 
-    if (widget.extrasData['horasSociales'] > 0) {
-      socialIsChecked = true;
-    }
-    if (widget.extrasData['horasDeportivas'] > 0) {
-      deportivoIsChecked = true;
-    }
-    if (widget.extrasData['horasCulturales'] > 0) {
-      culturalIsChecked = true;
-    }
-    if (widget.extrasData['horasAcademicas'] > 0) {
-      academicoIsChecked = true;
-    }
-
-    // Verifica si hay un pdf
+    // Verifica si 'archivosPDF' existe y no es null antes de convertirlo en una lista
     if (widget.extrasData['archivosPDF'] != null) {
       currentPDFPaths = List<String>.from(widget.extrasData['archivosPDF']);
     } else {
-      currentPDFPaths = []; // lista vacia por si es null
+      currentPDFPaths = []; // Inicializa como lista vacía si es null
     }
 
-    //Saca la info de la actividad
+    // Inicialización de campos
     nombreActividadController.text = widget.extrasData['nombreActividad'];
     descripcionController.text = widget.extrasData['descripcion'];
     DateTime fechaActividad = widget.extrasData['fechaActividad'].toDate();
@@ -60,14 +49,6 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         widget.extrasData['horasDeportivas'].toString();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(
-      actividadId) async {
-    return await FirebaseFirestore.instance
-        .collection('actividadesvoae')
-        .doc(actividadId)
-        .get();
-  }
-
   final TextEditingController nombreActividadController =
       TextEditingController();
   final TextEditingController fechaActividadController =
@@ -81,13 +62,8 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
   final TextEditingController horasDeportivasController =
       TextEditingController();
 
-  bool academicoIsChecked = false;
-  bool socialIsChecked = false;
-  bool culturalIsChecked = false;
-  bool deportivoIsChecked = false;
   late Timestamp fechaActividad;
 
-  //nuevo future editado
   Future<void> updateActividad(
     String docId,
     String nombreActividad,
@@ -119,7 +95,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
 
   Future<List<String>> uploadNewPDFs(List<PlatformFile> archivos) async {
     List<String> nuevasReferencias =
-        []; //la listpara almacenar los paths de los nuevos PDF
+        []; // CAMBIO: Lista para almacenar los paths de los nuevos PDF
 
     for (var archivo in archivos) {
       File file = File(archivo.path!);
@@ -179,9 +155,10 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
         actions: [
           ElevatedButton.icon(
             onPressed: () async {
-              List<String> referencias = currentPDFPaths;
+              List<String> referencias =
+                  currentPDFPaths; // CAMBIO: Inicializa con los PDF actuales
 
-              //Esto ssube nuevos archivos PDF si se seleccionaron
+              // CAMBIO: Subir nuevos archivos PDF si se seleccionaron
               if (newPDFs.isNotEmpty) {
                 referencias = await uploadNewPDFs(newPDFs);
               }
@@ -197,6 +174,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                 int.parse(horasDeportivasController.text),
                 referencias,
               );
+
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -204,13 +182,14 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                   ),
                 );
               }
+
+              // Navigator.of(context)
+              //     .pop(); // CAMBIO: Vuelve a la pantalla anterior tras la edición
             },
-            label: const Text('Modificar'),
+            label: const Text('Guardar cambios'),
             icon: const Icon(Icons.save),
           ),
-          const SizedBox(
-            width: 10,
-          )
+          const SizedBox(width: 10),
         ],
       ),
       body: SingleChildScrollView(
@@ -219,9 +198,6 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 10,
-              ),
               TextField(
                 controller: nombreActividadController,
                 decoration: InputDecoration(
@@ -231,9 +207,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                   label: const Text("Nombre"),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -248,9 +222,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const SizedBox(width: 10),
                   ElevatedButton.icon(
                     onPressed: _showDatePicker,
                     label: const Text('Elegir fecha'),
@@ -258,9 +230,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                   )
                 ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               TextField(
                 controller: descripcionController,
                 decoration: InputDecoration(
@@ -270,189 +240,32 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
                   label: const Text("Descripción"),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Colors.grey.shade500),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Text(
-                          'Ámbitos:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: academicoIsChecked,
-                                  onChanged: (value) {
-                                    setState(
-                                      () {
-                                        academicoIsChecked = value!;
-                                      },
-                                    );
-                                  },
-                                ),
-                                const Text('Científico/Académico'),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 40,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: academicoIsChecked,
-                                controller: horasAcademicasController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    hintText: '0'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: socialIsChecked,
-                                  onChanged: (value) {
-                                    setState(
-                                      () {
-                                        socialIsChecked = value!;
-                                      },
-                                    );
-                                  },
-                                ),
-                                const Text('Social'),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 150,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: socialIsChecked,
-                                controller: horasSocialesController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  hintText: '0',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                              value: culturalIsChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  culturalIsChecked = value!;
-                                });
-                              },
-                            ),
-                            const Text('Cultural'),
-                            const SizedBox(
-                              width: 140,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: culturalIsChecked,
-                                controller: horasCulturalesController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  hintText: '0',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                              value: deportivoIsChecked,
-                              onChanged: (value) {
-                                setState(() {
-                                  deportivoIsChecked = value!;
-                                });
-                              },
-                            ),
-                            const Text('Deportivo'),
-                            const SizedBox(
-                              width: 128,
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: 50,
-                              ),
-                              child: TextField(
-                                enabled: deportivoIsChecked,
-                                controller: horasDeportivasController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  hintText: '0',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+
+                // child: const Column(
+                //   children: [
+                //     Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Text(
+                //           'Ámbitos:',
+                //           style: TextStyle(
+                //             fontWeight: FontWeight.bold,
+                //             fontSize: 20,
+                //           ),
+                //         )
+                //       ],
+                //     ),
+                //     SizedBox(height: 10),
+                //     // Aquí van los Checkbox con los TextField para las horas de los ámbitos, igual que en la pantalla de creación
+                //   ],
+                // ),
               ),
               const SizedBox(height: 10),
               Row(
