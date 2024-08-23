@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 
 class PantallaRegistro extends StatefulWidget {
   const PantallaRegistro({super.key});
@@ -74,7 +73,7 @@ Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       try {
         // Crear un documento en Firestore con los datos ingresados
-        await FirebaseFirestore.instance.collection('usuarios').add({
+        await FirebaseFirestore.instance.collection('perfiles').add({
           'nombre': _nombreController.text,
           'correo': _correoController.text,
           'cuenta': _cuentaController.text,
