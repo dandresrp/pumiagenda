@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PantallaEditarPerfil extends StatefulWidget {
   const PantallaEditarPerfil({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _PantallaEditarPerfilState createState() => _PantallaEditarPerfilState();
 }
 
@@ -16,13 +16,50 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
   final _cuentaController = TextEditingController();
   final _carreraController = TextEditingController();
   String avatar = 'person';
+  String? profileDocId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProfileDocId().then((_) {
+      if (profileDocId != null) {
+        _getPerfilData(profileDocId!);
+      }
+    });
+  }
+
+  Future<void> _getProfileDocId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      profileDocId = prefs.getString('profileDocId');
+    });
+  }
+
+  Future<void> _getPerfilData(String perfilId) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('perfiles')
+        .doc(perfilId)
+        .get();
+
+    if (snapshot.exists) {
+      Map<String, dynamic> data = snapshot.data()!;
+      setState(() {
+        _nombreController.text = data['nombre'];
+        _correoController.text = data['correo'];
+        _cuentaController.text = data['cuenta'].toString();
+        _carreraController.text = data['carrera'];
+        avatar = data['avatar'];
+      });
+    }
+  }
 
   String? _validateNombre(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor ingrese su nombre';
     }
     if (value.length < 3 || value.length > 40) {
-      return 'El nombre debe tener mas caracteres';
+      return 'El nombre debe tener más caracteres';
     }
     return null;
   }
@@ -60,14 +97,17 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
     return null;
   }
 
-  Future<void> addPerfil(
+  Future<void> updatePerfil(
     String nombre,
     String correo,
     int cuenta,
     String carrera,
     String avatar,
-  ) {
-    return FirebaseFirestore.instance.collection('perfiles').add(
+  ) async {
+    await FirebaseFirestore.instance
+        .collection('perfiles')
+        .doc(profileDocId)
+        .update(
       {
         'nombre': nombre,
         'correo': correo,
@@ -236,19 +276,21 @@ class _PantallaEditarPerfilState extends State<PantallaEditarPerfil> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    addPerfil(
+                    await updatePerfil(
                       _nombreController.text,
                       _correoController.text,
                       int.parse(_cuentaController.text),
                       _carreraController.text,
                       avatar,
                     );
-                  } else {
-                    return;
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                   }
                 },
                 child: const Text(
-                  'Registrar',
+                  'Guardar',
                   style: TextStyle(
                     fontSize: 16,
                   ),

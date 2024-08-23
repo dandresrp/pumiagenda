@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PantallaRegistro extends StatefulWidget {
@@ -60,7 +62,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
     return null;
   }
 
-  Future<void> addPerfil(
+  Future<DocumentReference> addPerfil(
     String nombre,
     String correo,
     int cuenta,
@@ -236,13 +238,22 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    addPerfil(
+                    DocumentReference docRef = await addPerfil(
                       _nombreController.text,
                       _correoController.text,
                       int.parse(_cuentaController.text),
                       _carreraController.text,
                       avatar,
                     );
+
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setBool('isRegistered', true);
+                    await prefs.setString('profileDocId', docRef.id);
+
+                    if (context.mounted) {
+                      context.go('/');
+                    }
                   } else {
                     return;
                   }
