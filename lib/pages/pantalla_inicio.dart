@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pumiagenda/custom_widgets.dart';
+import 'package:pumiagenda/widgets/custom_widgets.dart';
 
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
@@ -32,7 +32,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   Future<DocumentSnapshot<Map<String, dynamic>>> getPerfil(
       String perfilId) async {
     return await FirebaseFirestore.instance
-        .collection('perfiles')
+        .collection('usuarios')
         .doc(perfilId)
         .get();
   }

@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:pumiagenda/custom_widgets.dart';
+import 'package:pumiagenda/widgets/custom_widgets.dart';
 
 class PantallaHorasVoae extends StatefulWidget {
   const PantallaHorasVoae({super.key});

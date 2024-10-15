@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pumiagenda/models/usuario_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PantallaRegistro extends StatefulWidget {
   const PantallaRegistro({super.key});
@@ -13,10 +13,10 @@ class PantallaRegistro extends StatefulWidget {
 
 class _PantallaRegistroState extends State<PantallaRegistro> {
   final _formKey = GlobalKey<FormState>();
-  final _nombreController = TextEditingController();
-  final _correoController = TextEditingController();
-  final _cuentaController = TextEditingController();
-  final _carreraController = TextEditingController();
+  final nombreController = TextEditingController();
+  final correoController = TextEditingController();
+  final cuentaController = TextEditingController();
+  final carreraController = TextEditingController();
   String avatar = 'person';
 
   String? _validateNombre(String? value) {
@@ -60,24 +60,6 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
       return 'Ingrese un nombre de carrera';
     }
     return null;
-  }
-
-  Future<DocumentReference> addPerfil(
-    String nombre,
-    String correo,
-    int cuenta,
-    String carrera,
-    String avatar,
-  ) {
-    return FirebaseFirestore.instance.collection('perfiles').add(
-      {
-        'nombre': nombre,
-        'correo': correo,
-        'cuenta': cuenta,
-        'carrera': carrera,
-        'avatar': avatar,
-      },
-    );
   }
 
   Icon _getIconByName(String avatar) {
@@ -200,7 +182,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               ),
               const SizedBox(height: 50),
               TextFormField(
-                controller: _nombreController,
+                controller: nombreController,
                 decoration: const InputDecoration(
                   labelText: 'Nombre',
                   border: OutlineInputBorder(),
@@ -209,7 +191,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _correoController,
+                controller: correoController,
                 decoration: const InputDecoration(
                   labelText: 'Correo Institucional',
                   border: OutlineInputBorder(),
@@ -218,7 +200,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _cuentaController,
+                controller: cuentaController,
                 decoration: const InputDecoration(
                   labelText: 'Cuenta',
                   border: OutlineInputBorder(),
@@ -227,7 +209,7 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _carreraController,
+                controller: carreraController,
                 decoration: const InputDecoration(
                   labelText: 'Carrera',
                   border: OutlineInputBorder(),
@@ -238,18 +220,21 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    DocumentReference docRef = await addPerfil(
-                      _nombreController.text,
-                      _correoController.text,
-                      int.parse(_cuentaController.text),
-                      _carreraController.text,
-                      avatar,
+                    Usuario usuario = Usuario(
+                      nombre: nombreController.text,
+                      correo: correoController.text,
+                      cuenta: int.parse(cuentaController.text),
+                      carrera: carreraController.text,
+                      avatar: avatar,
                     );
+
+                    await usuario.add();
 
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     await prefs.setBool('isRegistered', true);
-                    await prefs.setString('profileDocId', docRef.id);
+                    await prefs.setString(
+                        'profileDocId', usuario.cuenta.toString());
 
                     if (context.mounted) {
                       context.go('/');

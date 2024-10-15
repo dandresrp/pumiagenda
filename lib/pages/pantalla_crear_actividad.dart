@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:pumiagenda/models/actividad_model.dart';
 
 class NuevaActividad extends StatefulWidget {
   const NuevaActividad({super.key});
@@ -68,35 +69,35 @@ class _NuevaActividadState extends State<NuevaActividad> {
     return referencias;
   }
 
-  Future<void> addActividad(
-    String nombreActividad,
-    Timestamp? fechaActividad,
-    String? descripcion,
-    int? horasAcademicas,
-    int? horasSociales,
-    int? horasCulturales,
-    int? horasDeportivas,
-    List<Reference> referenciasArchivosPDF,
-  ) {
-    List<String> pathsArchivosPDF =
-        referenciasArchivosPDF.map((ref) => ref.fullPath).toList();
-    return FirebaseFirestore.instance
-        .collection('perfiles')
-        .doc(profileDocId)
-        .collection('actividadesvoae')
-        .add({
-      'nombreActividad': nombreActividad,
-      'descripcion': descripcion,
-      'horasAcademicas': horasAcademicas,
-      'horasSociales': horasSociales,
-      'horasCulturales': horasCulturales,
-      'horasDeportivas': horasDeportivas,
-      'fechaActividad': fechaActividad,
-      'fechaCreacion': Timestamp.now(),
-      'fechaActualizacion': Timestamp.now(),
-      'archivosPDF': pathsArchivosPDF,
-    });
-  }
+  // Future<void> addActividad(
+  //   String nombreActividad,
+  //   Timestamp? fechaActividad,
+  //   String? descripcion,
+  //   int? horasAcademicas,
+  //   int? horasSociales,
+  //   int? horasCulturales,
+  //   int? horasDeportivas,
+  //   List<Reference> referenciasArchivosPDF,
+  // ) {
+  //   List<String> pathsArchivosPDF =
+  //       referenciasArchivosPDF.map((ref) => ref.fullPath).toList();
+  //   return FirebaseFirestore.instance
+  //       .collection('perfiles')
+  //       .doc(profileDocId)
+  //       .collection('actividadesvoae')
+  //       .add({
+  //     'nombreActividad': nombreActividad,
+  //     'descripcion': descripcion,
+  //     'horasAcademicas': horasAcademicas,
+  //     'horasSociales': horasSociales,
+  //     'horasCulturales': horasCulturales,
+  //     'horasDeportivas': horasDeportivas,
+  //     'fechaActividad': fechaActividad,
+  //     'fechaCreacion': Timestamp.now(),
+  //     'fechaActualizacion': Timestamp.now(),
+  //     'archivosPDF': pathsArchivosPDF,
+  //   });
+  // }
 
   void _showDatePicker() {
     showDatePicker(
@@ -142,16 +143,22 @@ class _NuevaActividadState extends State<NuevaActividad> {
               if (_formKey.currentState!.validate()) {
                 List<Reference> referencias = await subirArchivos(archivos);
 
-                await addActividad(
-                  nombreActividadController.text,
-                  fechaActividad,
-                  descripcionController.text,
-                  int.tryParse(horasAcademicasController.text) ?? 0,
-                  int.tryParse(horasSocialesController.text) ?? 0,
-                  int.tryParse(horasCulturalesController.text) ?? 0,
-                  int.tryParse(horasDeportivasController.text) ?? 0,
-                  referencias,
+                Actividad act = Actividad(
+                  nombre: nombreActividadController.text,
+                  descripcion: descripcionController.text,
+                  horasAcademicas:
+                      int.tryParse(horasAcademicasController.text) ?? 0,
+                  horasSociales:
+                      int.tryParse(horasSocialesController.text) ?? 0,
+                  horasCulturales:
+                      int.tryParse(horasCulturalesController.text) ?? 0,
+                  horasDeportivas:
+                      int.tryParse(horasDeportivasController.text) ?? 0,
+                  fechaActividad: fechaActividad,
+                  referenciasArchivosPDF: referencias,
                 );
+
+                await act.add(profileDocId.toString());
 
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(

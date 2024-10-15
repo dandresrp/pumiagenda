@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pumiagenda/pantallas/pantalla_inicio.dart';
-import 'package:pumiagenda/pantallas/pantalla_horas_voae.dart';
-import 'package:pumiagenda/custom_widgets.dart';
-import 'package:pumiagenda/pantallas/pantalla_configuracion.dart';
+import 'package:pumiagenda/pages/pantalla_inicio.dart';
+import 'package:pumiagenda/pages/pantalla_horas_voae.dart';
+import 'package:pumiagenda/widgets/custom_widgets.dart';
+import 'package:pumiagenda/pages/pantalla_configuracion.dart';
 
 class PantallaNavegacion extends StatefulWidget {
   const PantallaNavegacion({super.key});
