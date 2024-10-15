@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:pumiagenda/custom_widgets.dart';
 
 class PantallaAmbito extends StatefulWidget {
@@ -11,6 +12,21 @@ class PantallaAmbito extends StatefulWidget {
 }
 
 class _PantallaAmbitoState extends State<PantallaAmbito> {
+  String? profileDocId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProfileDocId();
+  }
+
+  Future<void> _getProfileDocId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      profileDocId = prefs.getString('profileDocId');
+    });
+  }
+
   //filtra actividades según el ámbito
   Stream<QuerySnapshot> getActividades() {
     String ambito = widget.extrasData;
@@ -36,6 +52,8 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
 
     //filtro en función del campo de horas
     final actividadesStream = FirebaseFirestore.instance
+        .collection('perfiles')
+        .doc(profileDocId)
         .collection('actividadesvoae')
         .where(campoHoras, isGreaterThan: 0)
         .snapshots();
@@ -115,6 +133,8 @@ class _PantallaAmbitoState extends State<PantallaAmbito> {
                             onTap: () async {
                               // Eliminar actividad de Firebase
                               await FirebaseFirestore.instance
+                                  .collection('perfiles')
+                                  .doc(profileDocId)
                                   .collection('actividadesvoae')
                                   .doc(docId)
                                   .delete();

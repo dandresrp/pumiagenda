@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PantallaEditarActividad extends StatefulWidget {
   final dynamic extrasData;
@@ -14,6 +15,15 @@ class PantallaEditarActividad extends StatefulWidget {
 }
 
 class _NuevaActividadState extends State<PantallaEditarActividad> {
+  String? profileDocId;
+
+  Future<void> _getProfileDocId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      profileDocId = prefs.getString('profileDocId');
+    });
+  }
+
   late String docId;
 
   List<String> currentPDFPaths = [];
@@ -22,6 +32,7 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
   @override
   void initState() {
     super.initState();
+    _getProfileDocId();
     docId = widget.extrasData['documentId'];
 
     if (widget.extrasData['horasSociales'] > 0) {
@@ -63,6 +74,8 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
   Future<DocumentSnapshot<Map<String, dynamic>>> getActividad(
       actividadId) async {
     return await FirebaseFirestore.instance
+        .collection('perfiles')
+        .doc(profileDocId)
         .collection('actividadesvoae')
         .doc(actividadId)
         .get();
@@ -100,6 +113,8 @@ class _NuevaActividadState extends State<PantallaEditarActividad> {
     List<String> referenciasArchivosPDF,
   ) {
     return FirebaseFirestore.instance
+        .collection('perfiles')
+        .doc(profileDocId)
         .collection('actividadesvoae')
         .doc(docId)
         .update(
